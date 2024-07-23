@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Omar Johnson" />
+
+<meta name="date" content="2024-07-18" />
+
+<title>Johnson_DOX_24_4</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Johnson_DOX_24</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Johnson_DOX_24_4</h1>
+<h4 class="author">Omar Johnson</h4>
+<h4 class="date">2024-07-18</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-07-23
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>DOX_24_Github/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240723code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240723)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240723code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240723)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong88c6686">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 88c6686
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong88c6686"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 88c6686.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    analysis/Johnson_DOX_24_4.html
+    Ignored:    analysis/Johnson_DOX_24_5.html
+    Ignored:    analysis/Johnson_DOX_24_6.html
+    Ignored:    analysis/Johnson_DOX_24_7.html
+    Ignored:    analysis/Johnson_DOX_24_8.html
+    Ignored:    analysis/Johnson_DOX_24_RUV_Limma.html
+
+Untracked files:
+    Untracked:  Fig_2.Rmd
+    Untracked:  Fig_2.html
+    Untracked:  analysis/Johnson_DOX_24_RUV_Limma.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Johnson_DOX_24_4.Rmd</code>) and
+HTML (<code>docs/Johnson_DOX_24_4.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+88c6686
+</td>
+<td>
+Omar-Johnson
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+Publish the initial files for myproject
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-libraries" class="section level1">
+<h1>Load Libraries</h1>
+</div>
+<div id="read-in-data" class="section level1">
+<h1>Read in Data</h1>
+</div>
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<pre class="r"><code># 1 
+perform_module_comparisons_mutexc &lt;- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) &amp;&amp; value_col %in% names(df))) {
+    stop(&quot;Specified columns do not exist in the dataframe.&quot;)
+  }
+
+  # Get a list of all unique modules
+  modules &lt;- unique(df[[module_col]])
+
+  # Initialize an empty dataframe to store results
+  results &lt;- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data &lt;- df %&gt;% filter(!!sym(module_col) == module) %&gt;% pull(!!sym(value_col))
+
+    # Data for all other modules
+    other_data &lt;- df %&gt;% filter(!!sym(module_col) != module) %&gt;% pull(!!sym(value_col))
+
+    # Perform the Wilcoxon test
+    test_result &lt;- wilcox.test(current_data, other_data)
+
+    # Add the results to the dataframe
+    results &lt;- rbind(results, data.frame(Module1 = module,
+                                         Module2 = &quot;Others&quot;,
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(results)
+}
+
+
+# 2 
+perform_module_comparisons_mutexc_2 &lt;- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) &amp;&amp; value_col %in% names(df))) {
+    stop(&quot;Specified columns do not exist in the dataframe.&quot;)
+  }
+
+  # Get a list of all unique modules
+  modules &lt;- unique(df[[module_col]])
+
+  # Initialize an empty list to store combined data frames
+  combined_df_list &lt;- list()
+
+  # Initialize an empty dataframe to store results
+  results &lt;- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data &lt;- df %&gt;% filter(!!sym(module_col) == module) %&gt;% 
+                    mutate(Group = as.character(module))
+
+    # Data for all other modules
+    other_data &lt;- df %&gt;% filter(!!sym(module_col) != module) %&gt;% 
+                    mutate(Group = paste(&quot;Not&quot;, module, sep=&quot;&quot;))
+
+    # Combine current module data with other module data
+    combined_data &lt;- rbind(current_data, other_data)
+
+    # Add the combined data to the list
+    combined_df_list[[module]] &lt;- combined_data
+
+    # Perform the Wilcoxon test
+    test_result &lt;- wilcox.test(current_data[[value_col]], other_data[[value_col]])
+
+    # Add the results to the dataframe
+    results &lt;- rbind(results, data.frame(Module1 = module,
+                                         Module2 = &quot;Others&quot;,
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(list(&quot;results&quot; = results, &quot;combined_data&quot; = combined_df_list))
+}
+
+
+# 3 
+# Generate enrichment function limited to the EXPRESSED proteins.
+perform_module_disease_analysis_2 &lt;- function(toptable, diseaseGenes) {
+  # Prepare an empty list to collect results
+  results &lt;- list()
+  
+  # Ensure &#39;Modules&#39; and &#39;Protein&#39; columns exist in &#39;toptable&#39;
+  if(!&quot;Modules&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;Modules&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  if(!&quot;Protein&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;Protein&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  
+  # Filter disease genes to include only those that are expressed in toptable
+  expressedDiseaseGenes &lt;- lapply(diseaseGenes, function(genes) {
+    intersect(genes, toptable$Protein)
+  })
+  
+  # Loop through each module
+  modules &lt;- unique(toptable$Modules)
+  for (module in modules) {
+    # Get the proteins in the module
+    moduleGenes &lt;- toptable$Protein[toptable$Modules == module]
+    
+    # Loop through each disease gene set
+    for (diseaseName in names(expressedDiseaseGenes)) {
+      # Find the intersecting genes between the module and the expressed disease genes
+      diseaseModuleIntersect &lt;- intersect(moduleGenes, expressedDiseaseGenes[[diseaseName]])
+      
+      # Calculate elements for the contingency table
+      numIntersect = length(diseaseModuleIntersect)
+      numInModuleNotDisease = length(moduleGenes) - numIntersect
+      numInDiseaseNotModule = length(expressedDiseaseGenes[[diseaseName]]) - numIntersect
+      numInNeither = nrow(toptable) - (numIntersect + numInModuleNotDisease + numInDiseaseNotModule)
+      
+      # Build the contingency table
+      table &lt;- matrix(c(
+        numIntersect, # Both in disease list and module
+        numInModuleNotDisease, # In module but not disease list
+        numInDiseaseNotModule, # In disease list but not module
+        numInNeither # In neither list
+      ), nrow = 2, byrow = TRUE)
+      
+      # Perform chi-squared test and Fisher&#39;s exact test with error handling
+      chiSqTestResult &lt;- tryCatch({
+        chisq.test(table, correct = TRUE)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      fisherTestResult &lt;- tryCatch({
+        fisher.test(table)
+      }, error = function(e) {
+        list(p.value = NA, odds.ratio = NA)
+      }, warning = function(w) {
+        list(p.value = NA, odds.ratio = NA)
+      })
+      
+      # Calculate percent overlap, handle division by zero
+      percentOverlap &lt;- if (length(moduleGenes) &gt; 0) {
+        (numIntersect / length(expressedDiseaseGenes[[diseaseName]])) * 100
+      } else {
+        0
+      }
+      
+      # Convert intersecting genes to a single character string
+      intersectingGenesStr &lt;- if (numIntersect &gt; 0) {
+        paste(diseaseModuleIntersect, collapse = &quot;;&quot;)
+      } else {
+        &quot;&quot;  # Use an empty string to indicate no intersection
+      }
+      
+      # Append to results list
+      results[[paste(module, diseaseName, sep = &quot;_&quot;)]] &lt;- data.frame(
+        Modules = module,
+        Disease = diseaseName,
+        ChiSqPValue = chiSqTestResult$p.value,
+        FisherPValue = fisherTestResult$p.value,
+        OddsRatio = fisherTestResult$estimate,
+        PercentOverlap = percentOverlap,
+        IntersectingGenes = intersectingGenesStr
+      )
+    }
+  }
+  
+  # Combine results into a single data frame
+  combined_df &lt;- do.call(rbind, results)
+  return(combined_df)
+}
+
+
+# 4 
+# For testing for enrichment in the circos plot 
+perform_module_disease_analysis &lt;- function(toptable, diseaseGenes) {
+  # Prepare an empty list to collect results
+  results &lt;- list()
+  
+  # Ensure &#39;Modules&#39; and &#39;Protein&#39; columns exist in &#39;toptable&#39;
+  if(!&quot;Modules&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;Modules&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  if(!&quot;Protein&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;Protein&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  
+  # Filter disease genes to include only those that are expressed in toptable
+  expressedDiseaseGenes &lt;- lapply(diseaseGenes, function(genes) {
+    intersect(genes, toptable$Protein)
+  })
+  
+  # Loop through each module
+  modules &lt;- unique(toptable$Modules)
+  for (module in modules) {
+    # Get the genes in the module
+    moduleGenes &lt;- toptable$Protein[toptable$Modules == module]
+    
+    # Loop through each disease gene set
+    for (diseaseName in names(expressedDiseaseGenes)) {
+      # Find the intersecting genes between the module and the expressed disease genes
+      diseaseModuleIntersect &lt;- intersect(moduleGenes, expressedDiseaseGenes[[diseaseName]])
+      
+      # Calculate elements for the contingency table
+      numIntersect = length(diseaseModuleIntersect)
+      numInModuleNotDisease = length(moduleGenes) - numIntersect
+      numInDiseaseNotModule = length(expressedDiseaseGenes[[diseaseName]]) - numIntersect
+      numInNeither = nrow(toptable) - (numIntersect + numInModuleNotDisease + numInDiseaseNotModule)
+      
+      # Build the contingency table
+      table &lt;- matrix(c(
+        numIntersect, # Both in disease list and module
+        numInModuleNotDisease, # In module but not disease list
+        numInDiseaseNotModule, # In disease list but not module
+        numInNeither # In neither list
+      ), nrow = 2, byrow = TRUE)
+      
+      # Perform chi-squared test and Fisher&#39;s exact test with error handling
+      chiSqTestResult &lt;- tryCatch({
+        chisq.test(table, correct = TRUE)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      fisherTestResult &lt;- tryCatch({
+        fisher.test(table)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      # Calculate percent overlap, handle division by zero
+      percentOverlap &lt;- if (length(moduleGenes) &gt; 0) {
+        (numIntersect / length(expressedDiseaseGenes[[diseaseName]])) * 100
+      } else {
+        0
+      }
+      
+      # Convert intersecting genes to a single character string
+      intersectingGenesStr &lt;- if (numIntersect &gt; 0) {
+        paste(diseaseModuleIntersect, collapse = &quot;;&quot;)
+      } else {
+        &quot;&quot;  # Use an empty string to indicate no intersection
+      }
+      
+      # Append to results list
+      results[[paste(module, diseaseName, sep = &quot;_&quot;)]] &lt;- data.frame(
+        Modules = module,
+        Disease = diseaseName,
+        ChiSqPValue = chiSqTestResult$p.value,
+        FisherPValue = fisherTestResult$p.value,
+        PercentOverlap = percentOverlap,
+        IntersectingGenes = intersectingGenesStr
+      )
+    }
+  }
+  
+  # Combine results into a single data frame
+  results_df &lt;- do.call(rbind, results)
+  return(results_df)
+}</code></pre>
+</div>
+<div id="fig-4a-s9-biological-process-enrichment"
+class="section level1">
+<h1>Fig-4A &amp; S9 Biological process enrichment</h1>
+<pre class="r"><code>GO_results_DOX %&gt;% head()</code></pre>
+<pre><code>  X ONTOLOGY         ID
+1 1       BP GO:0006396
+2 2       BP GO:0006397
+3 3       BP GO:0016071
+4 4       BP GO:0008380
+5 5       BP GO:0000375
+6 6       BP GO:0000377
+                                                                           Description
+1                                                                       RNA processing
+2                                                                      mRNA processing
+3                                                               mRNA metabolic process
+4                                                                         RNA splicing
+5                                      RNA splicing, via transesterification reactions
+6 RNA splicing, via transesterification reactions with bulged adenosine as nucleophile
+  GeneRatio  BgRatio       pvalue     p.adjust       qvalue
+1   187/549 442/3999 9.515453e-58 2.681455e-54 2.496054e-54
+2   127/549 256/3999 5.146303e-47 7.014120e-44 6.529150e-44
+3   148/549 337/3999 7.467126e-47 7.014120e-44 6.529150e-44
+4   103/549 221/3999 1.215885e-34 8.565909e-32 7.973645e-32
+5    82/549 166/3999 1.043049e-29 5.878626e-27 5.472166e-27
+6    80/549 164/3999 1.702370e-28 6.853254e-26 6.379407e-26
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        geneID
+1 SUPT5H/SAP18/PES1/TCERG1/U2SURP/DHX15/RNMT/RRP8/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/PTCD1/RNF40/PRPF40A/NPM3/POP7/BCAS2/SMNDC1/RSL1D1/PRPF6/RPP14/SCAF4/LUC7L3/CELF2/PARN/CPSF4/LSM8/SNRPA/HNRNPL/DDX5/SON/NCL/U2AF2/PTBP1/RBMS1/TIA1/COIL/MTREX/RPS27/NOP2/RBM25/HNRNPM/ADAR/HNRNPH2/HNRNPK/SNRPF/LSM6/SUPT4H1/RPP30/RBM10/HNRNPU/U2AF1/SRSF2/EXOSC10/SRSF11/EXOSC9/KHDRBS1/SRSF1/GRSF1/SF3A3/IK/TARDBP/HNRNPA0/SRSF5/SRSF6/PPIG/SF3B2/PRPF4B/SNW1/THOC5/DDX39B/EXOSC2/CIRBP/HNRNPD/FRG1/RBM39/RRP1B/ZNF638/EXOSC7/NONO/RNPS1/SAFB/SF3A2/SF3A1/SF1/TSR1/SMU1/LARP7/NCBP3/USP39/ZNF326/NOL9/SPOUT1/RBM20/RBM26/INTS11/RPRD2/INTS3/PDE12/ZCCHC8/RPUSD3/CDC73/PRPF8/ALKBH5/INTS5/CTR9/ZC3H14/FIP1L1/TRMT1L/NOP9/PABPN1/SUGP2/FTSJ3/CCAR2/INTS1/CPSF7/PAF1/PRPF38A/DDX54/BRIX1/HNRNPLL/PRPF31/SREK1/DDX17/CELF1/KHSRP/RBPMS/EXOSC8/NSUN4/SNRNP40/MTFMT/THOC1/INTS4/RBM17/RPRD1A/RBM14/QKI/SLC38A2/IWS1/CDC5L/POP1/HNRNPUL1/DDX23/TRMT61B/RBM4/RBM24/QTRT1/MAK16/GTPBP4/WDR33/NAT10/XRN2/INTS2/PNN/TFB2M/EXOSC4/EXOSC5/DDX21/INTS7/DDX18/INTS10/MTPAP/SLTM/DDX56/FASTKD2/PUF60/PTBP2/MRTO4/ACIN1/PRPF19/SCAF8/SRRM2/THRAP3/WBP11/LSM2/EXOSC1/YTHDF2/RBM8A/NCOR2
+2                                                                                                                                                                                                                                                                                                                                                                                            SUPT5H/SAP18/TCERG1/DHX15/RNMT/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/RNF40/PRPF40A/BCAS2/SMNDC1/PRPF6/SCAF4/LUC7L3/CELF2/CPSF4/LSM8/SNRPA/HNRNPL/DDX5/SON/NCL/U2AF2/PTBP1/TIA1/COIL/MTREX/RBM25/HNRNPM/ADAR/HNRNPK/SNRPF/LSM6/SUPT4H1/RBM10/HNRNPU/U2AF1/SRSF2/SRSF11/KHDRBS1/SRSF1/GRSF1/SF3A3/IK/TARDBP/HNRNPA0/SRSF5/SRSF6/SF3B2/PRPF4B/SNW1/THOC5/DDX39B/CIRBP/FRG1/RBM39/RRP1B/NONO/RNPS1/SAFB/SF3A2/SF3A1/SF1/SMU1/LARP7/NCBP3/USP39/ZNF326/RBM20/RBM26/RPRD2/PDE12/ZCCHC8/RPUSD3/CDC73/PRPF8/ALKBH5/CTR9/ZC3H14/FIP1L1/PABPN1/SUGP2/CCAR2/CPSF7/PAF1/PRPF38A/HNRNPLL/PRPF31/SREK1/DDX17/CELF1/KHSRP/SNRNP40/THOC1/RBM17/RPRD1A/RBM14/QKI/IWS1/CDC5L/DDX23/RBM4/RBM24/WDR33/XRN2/PNN/MTPAP/SLTM/PUF60/PTBP2/ACIN1/PRPF19/SCAF8/SRRM2/THRAP3/WBP11/LSM2/RBM8A
+3                                                                                                                                                                                                                                                  SUPT5H/SAP18/TCERG1/DHX15/RNMT/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/RNF40/PRPF40A/BCAS2/SMNDC1/PRPF6/SCAF4/LUC7L3/CELF2/PARN/CPSF4/LSM8/NPM1/SNRPA/HNRNPL/YBX3/DDX5/SON/NCL/U2AF2/PTBP1/TIA1/COIL/MTREX/RBM25/HNRNPM/ADAR/HNRNPK/SNRPF/LSM6/SUPT4H1/RBM10/HNRNPU/U2AF1/SRSF2/EXOSC10/SRSF11/EXOSC9/KHDRBS1/SRSF1/GRSF1/SF3A3/IK/TARDBP/HNRNPA0/SRSF5/SRSF6/SF3B2/PRPF4B/SNW1/THOC5/DDX39B/EXOSC2/CIRBP/HNRNPD/FRG1/RBM39/RRP1B/EXOSC7/NONO/RNPS1/PCBP2/SAFB/SF3A2/SF3A1/SF1/MED1/ELAVL1/SMU1/LARP7/NCBP3/USP39/ZNF326/RBM20/RBM26/RPRD2/PDE12/ZCCHC8/RPUSD3/CDC73/PRPF8/ALKBH5/CTR9/ZC3H14/FIP1L1/GIGYF2/PABPN1/SUGP2/CCAR2/CPSF7/PAF1/PRPF38A/HNRNPLL/ATXN2L/PRPF31/SREK1/DDX17/CELF1/UPF1/KHSRP/EXOSC8/SNRNP40/THOC1/RBM17/RPRD1A/RBM14/QKI/IWS1/CDC5L/DDX23/TRMT61B/RBM4/RBM24/WDR33/XRN2/PNN/EXOSC4/EXOSC5/MTPAP/SLTM/FASTKD2/PUF60/PTBP2/MRTO4/ACIN1/PRPF19/SCAF8/SRRM2/THRAP3/WBP11/LSM2/YTHDF2/RBM8A
+4                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            SAP18/TCERG1/DHX15/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/PRPF40A/BCAS2/SMNDC1/PRPF6/LUC7L3/CELF2/LSM8/SNRPA/HNRNPL/DDX5/SON/NCL/U2AF2/PTBP1/TIA1/COIL/MTREX/RBM25/HNRNPM/HNRNPH2/HNRNPK/SNRPF/LSM6/RBM10/HNRNPU/U2AF1/SRSF2/SRSF11/KHDRBS1/SRSF1/GRSF1/SF3A3/IK/TARDBP/SRSF5/SRSF6/PPIG/SF3B2/PRPF4B/SNW1/THOC5/DDX39B/CIRBP/FRG1/RBM39/RRP1B/ZNF638/NONO/RNPS1/SF3A2/SF3A1/SF1/SMU1/LARP7/USP39/ZNF326/RBM20/ZCCHC8/PRPF8/SUGP2/CCAR2/PRPF38A/HNRNPLL/PRPF31/SREK1/DDX17/CELF1/KHSRP/SNRNP40/THOC1/RBM17/RBM14/QKI/SLC38A2/IWS1/CDC5L/DDX23/RBM4/RBM24/PNN/PUF60/PTBP2/ACIN1/PRPF19/SRRM2/THRAP3/WBP11/LSM2/RBM8A
+5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  SAP18/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/PRPF40A/BCAS2/SMNDC1/PRPF6/LUC7L3/CELF2/LSM8/SNRPA/HNRNPL/DDX5/SON/NCL/U2AF2/PTBP1/TIA1/COIL/MTREX/RBM25/HNRNPM/HNRNPK/SNRPF/LSM6/RBM10/HNRNPU/U2AF1/SRSF2/KHDRBS1/SRSF1/SF3A3/IK/SRSF5/SRSF6/SF3B2/PRPF4B/SNW1/DDX39B/CIRBP/FRG1/RBM39/RNPS1/SF3A2/SF3A1/SF1/SMU1/LARP7/USP39/ZCCHC8/PRPF8/PRPF38A/PRPF31/DDX17/CELF1/KHSRP/SNRNP40/RBM17/RBM14/QKI/CDC5L/DDX23/RBM4/RBM24/PNN/PUF60/PTBP2/PRPF19/SRRM2/THRAP3/WBP11/LSM2/RBM8A
+6                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               SAP18/PRPF4/RBFOX2/SART1/HNRNPR/PRPF3/PPIH/PLRG1/DHX16/KDM1A/SYNCRIP/PQBP1/PRPF40A/BCAS2/PRPF6/LUC7L3/CELF2/LSM8/SNRPA/HNRNPL/DDX5/SON/NCL/U2AF2/PTBP1/TIA1/COIL/MTREX/RBM25/HNRNPM/HNRNPK/SNRPF/LSM6/RBM10/HNRNPU/U2AF1/SRSF2/KHDRBS1/SRSF1/SF3A3/IK/SRSF5/SRSF6/SF3B2/PRPF4B/SNW1/DDX39B/CIRBP/FRG1/RBM39/RNPS1/SF3A2/SF3A1/SF1/SMU1/LARP7/USP39/ZCCHC8/PRPF8/PRPF38A/PRPF31/DDX17/CELF1/SNRNP40/RBM17/RBM14/QKI/CDC5L/DDX23/RBM4/RBM24/PNN/PUF60/PTBP2/PRPF19/SRRM2/THRAP3/WBP11/LSM2/RBM8A
+  Count Module p.adj.log
+1   187  green 123.35324
+2   127  green  99.36582
+3   148  green  99.36582
+4   103  green  71.53493
+5    82  green  60.39847
+6    80  green  57.94249</code></pre>
+<pre class="r"><code>GO_results_DOX$ONTOLOGY %&gt;% unique()</code></pre>
+<pre><code>[1] &quot;BP&quot;</code></pre>
+<pre class="r"><code>GO_results_DOX$Module %&gt;% unique()</code></pre>
+<pre><code>[1] &quot;green&quot;       &quot;lightyellow&quot; &quot;salmon&quot;      &quot;darkgreen&quot;  </code></pre>
+<pre class="r"><code># Convert the data frame to a list
+list_input &lt;- GO_results_DOX %&gt;%
+  group_by(Module) %&gt;%
+  summarise(Description = list(Description)) %&gt;%
+  deframe()
+
+
+# Upset plot
+upset(
+  fromList(list_input),
+  sets = names(list_input), # show all sets in the plot
+  order.by = &quot;freq&quot;,
+  sets.bar.color = &quot;#56B4E9&quot;,
+  matrix.color = &quot;black&quot;,
+  main.bar.color = &quot;#D55E00&quot;
+)</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>GO_results_DOX$p.adj.log &lt;- -log(GO_results_DOX$p.adjust)
+GO_results_DOX_green &lt;- GO_results_DOX[GO_results_DOX$Module == &quot;green&quot;, ]
+
+GO_results_DOX_green_sorted &lt;- GO_results_DOX_green[order(GO_results_DOX_green$p.adj.log), ]
+
+GO_results_DOX_green_sorted$Description &lt;-factor(GO_results_DOX_green_sorted$Description, levels = rev(GO_results_DOX_green_sorted$Description))
+
+
+# 
+# 
+# GO_results_DOX_sorted &lt;- GO_results_DOX[order(GO_results_DOX$p.adj.log), ]
+# 
+# GO_results_DOX_sorted$Description &lt;-factor(GO_results_DOX_sorted$Description, levels = GO_results_DOX_sorted$Description)
+
+
+# Plotting
+ ggplot(GO_results_DOX_green_sorted, aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()+
+   ylim(c(0,130))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> # Plotting
+ ggplot(GO_results_DOX_green_sorted[150:nrow(GO_results_DOX_green_sorted),  ], aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()+
+   ylim(c(0,130))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # Plotting
+ ggplot(GO_results_DOX_green_sorted[75:150,], aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()+
+   ylim(c(0,130))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # Plotting
+ ggplot(GO_results_DOX_green_sorted[1:75, ], aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()+
+   ylim(c(0,130))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> GO_results_DOX$p.adj.log &lt;- -log(GO_results_DOX$p.adjust)
+GO_results_DOX_green &lt;- GO_results_DOX[GO_results_DOX$Module == &quot;darkgreen&quot;, ]
+
+GO_results_DOX_green_sorted &lt;- GO_results_DOX_green[order(GO_results_DOX_green$p.adj.log), ]
+
+GO_results_DOX_green_sorted$Description &lt;-factor(GO_results_DOX_green_sorted$Description, levels = rev(GO_results_DOX_green_sorted$Description))
+
+
+# Plotting
+ ggplot(GO_results_DOX_green_sorted, aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> GO_results_DOX$p.adj.log &lt;- -log(GO_results_DOX$p.adjust)
+GO_results_DOX_green &lt;- GO_results_DOX[GO_results_DOX$Module == &quot;salmon&quot;, ]
+
+GO_results_DOX_green_sorted &lt;- GO_results_DOX_green[order(GO_results_DOX_green$p.adj.log), ]
+
+GO_results_DOX_green_sorted$Description &lt;-factor(GO_results_DOX_green_sorted$Description, levels = rev(GO_results_DOX_green_sorted$Description))
+
+
+# Plotting
+ ggplot(GO_results_DOX_green_sorted, aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-7.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code> GO_results_DOX$p.adj.log &lt;- -log(GO_results_DOX$p.adjust)
+GO_results_DOX_green &lt;- GO_results_DOX[GO_results_DOX$Module == &quot;lightyellow&quot;, ]
+
+GO_results_DOX_green_sorted &lt;- GO_results_DOX_green[order(GO_results_DOX_green$p.adj.log), ]
+
+GO_results_DOX_green_sorted$Description &lt;-factor(GO_results_DOX_green_sorted$Description, levels = rev(GO_results_DOX_green_sorted$Description))
+
+
+# Plotting
+ ggplot(GO_results_DOX_green_sorted, aes(x = Description, y = p.adj.log, fill = Module)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(title = &quot;&quot;,
+       x = &quot;&quot;,
+       y = &quot;-log-adj. pval&quot;) +
+  theme_dark() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+   scale_fill_identity()</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Modified%20GO%20representation%202-8.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fig-4b-enriched-protein-categories" class="section level1">
+<h1>Fig-4B Enriched protein categories</h1>
+<pre class="r"><code>#### Main heatmap #### 
+# Plot results 
+results_df &lt;- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = HPA_General3)
+
+
+melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+
+
+melted_results_2 &lt;- melted_results
+melted_results_2 &lt;- melted_results
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+melted_results_3 &lt;- melted_results_2[melted_results_2$Modules %in% c(&quot;green&quot;, &quot;darkgreen&quot;, &quot;midnightblue&quot;, &quot;salmon&quot;,&quot;lightyellow&quot;), ]
+
+# Vertical
+ggplot(melted_results_3, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 3, 6)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 8, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.5, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Subsetting the graph 
+ggplot(melted_results_2, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 2, 30)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 8, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(1, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>melted_results_3_sub &lt;- melted_results_3[melted_results_3$Disease %in% c(&quot;transporters&quot;, &quot;transcription factors&quot;, &quot;stress granules&quot;, &quot;RNA binding proteins&quot;, &quot;enzymes&quot;), ]
+
+
+
+
+ggplot(melted_results_3_sub, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 3, 6)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 8, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.5, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#### Barplots #### 
+Combined_for_barplots &lt;- HPA_General3
+Combined_for_barplots$RBPs &lt;-HPA_General4_test$`All RBP types`
+Combined_for_barplots$TFs &lt;-TF_UNIPROT_ENSEMBL_2_2$uniprotswissprot 
+
+
+
+
+
+# Get resultsdf:
+results_df &lt;- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = Combined_for_barplots)
+
+
+# TFs: 
+results_df_DOXcorr &lt;- results_df[results_df$Modules %in% c(&quot;green&quot;), ]
+
+results_df_DOXcorr_trans &lt;- results_df_DOXcorr[results_df_DOXcorr$Disease == &quot;TFs&quot;, ]
+
+
+results_df_DOXcorr_Secreted &lt;- c(strsplit(results_df_DOXcorr_trans$IntersectingGenes, &quot;;&quot;)) %&gt;% unlist()
+
+
+results_df_DOXcorr_Secreted_hub &lt;- results_df_DOXcorr_Secreted
+
+TF_Dataforplot &lt;- New_RNA_PRO_DF_3[New_RNA_PRO_DF_3$Protein %in% results_df_DOXcorr_Secreted_hub, ]
+
+
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$logFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# ------ Adjusted code for barplot for transcription factors 
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$Pro_LogFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# Reorder hgnc_symbol based on Pro_LogFC
+TF_Dataforplot_top_20$hgnc_symbol &lt;- factor(TF_Dataforplot_top_20$hgnc_symbol, 
+                                            levels = TF_Dataforplot_top_20$hgnc_symbol[order(TF_Dataforplot_top_20$Pro_LogFC)])
+
+# Plot
+ggplot(TF_Dataforplot_top_20, aes(x = hgnc_symbol, y = Pro_LogFC, fill = Modules)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(
+    y = &quot;logFC&quot;,
+    fill = &quot;Modules&quot;
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_identity() +
+  ylim(c(-3.5, 3.5))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>HPA_General4_test &lt;-HPA_General2_test
+
+# RBPs: 
+Combined_for_barplots$RBPs &lt;- HPA_General4_test$`All RBP types`
+results_df$Disease %&gt;% unique()</code></pre>
+<pre><code> [1] &quot;stress granules&quot;        &quot;signaling peptides&quot;     &quot;transcription factors&quot; 
+ [4] &quot;transporters&quot;           &quot;voltage gated channels&quot; &quot;sarcomere&quot;             
+ [7] &quot;enzymes&quot;                &quot;RNA binding proteins&quot;   &quot;RBPs&quot;                  
+[10] &quot;TFs&quot;                   </code></pre>
+<pre class="r"><code>results_df_DOXcorr &lt;- results_df[results_df$Modules %in% c(&quot;green&quot;, &quot;lightyellow&quot;), ]
+
+results_df_DOXcorr_trans &lt;- results_df_DOXcorr[results_df_DOXcorr$Disease == &quot;RBPs&quot;, ]
+results_df_DOXcorr_trans</code></pre>
+<pre><code>                     Modules Disease  ChiSqPValue FisherPValue OddsRatio
+green_RBPs             green    RBPs 5.868334e-25 6.720411e-20  3.904224
+lightyellow_RBPs lightyellow    RBPs 7.511125e-11 4.192718e-09  2.752140
+                 PercentOverlap
+green_RBPs             35.68627
+lightyellow_RBPs       22.74510
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            IntersectingGenes
+green_RBPs       O00541;O14979;O43172;O43251;O43823;O60506;O75940;O94906;O95104;O95453;O95793;P06748;P09012;P14866;P16989;P17844;P26368;P26599;P31483;P49756;P52272;P55265;P55795;P61978;Q00839;Q01081;Q01085;Q01130;Q05519;Q06265;Q07666;Q07955;Q12849;Q12874;Q12905;Q12906;Q13148;Q13151;Q13243;Q13283;Q13427;Q14011;Q14103;Q14498;Q14789;Q15233;Q15365;Q15366;Q15424;Q15637;Q15654;Q4G0J3;Q5BKZ1;Q6P2Q9;Q6UN15;Q7L2E3;Q86U42;Q86XP3;Q8IX01;Q8N163;Q8N684;Q8WUA2;Q8WVV9;Q8WXF1;Q92667;Q92879;Q92900;Q92945;Q96AE4;Q96I24;Q96I25;Q96PK6;Q96PU8;Q99700;Q9BUJ2;Q9BVP2;Q9BWF3;Q9BWU0;Q9BX46;Q9BXY0;Q9H0D6;Q9H307;Q9NQT4;Q9NR30;Q9NUL3;Q9NVV4;Q9NWH9;Q9NYY8;Q9NZB2;Q9UHX1;Q9Y520
+lightyellow_RBPs                                                                                                                                                                                                                                        O00571;O15371;O15372;O75533;O75821;P05388;P11940;P15880;P20042;P22626;P23246;P23396;P23588;P26196;P33240;P35637;P38919;P39019;P43243;P46782;P46783;P51114;P51116;P57721;P61247;P61326;P62280;P62847;P63244;P68036;Q04637;Q12972;Q13310;Q13825;Q14151;Q14152;Q14240;Q14671;Q17RY0;Q53R41;Q6PKG0;Q71RC2;Q7KZF4;Q7Z417;Q7Z478;Q8IWS0;Q8IZH2;Q8NC51;Q96DH6;Q9GZR7;Q9HAV4;Q9NUL7;Q9NVU7;Q9UKM9;Q9UN86;Q9Y3A5;Q9Y4Z0;Q9Y6M1</code></pre>
+<pre class="r"><code>results_df_DOXcorr_Secreted &lt;- c(strsplit(results_df_DOXcorr_trans$IntersectingGenes, &quot;;&quot;)[[1]], 
+           strsplit(results_df_DOXcorr_trans$IntersectingGenes, &quot;;&quot;)[[2]])
+
+results_df_DOXcorr_Secreted_hub &lt;- results_df_DOXcorr_Secreted
+
+TF_Dataforplot &lt;- New_RNA_PRO_DF_3[New_RNA_PRO_DF_3$Protein %in% results_df_DOXcorr_Secreted_hub, ]
+
+
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$logFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# ------ Adjusted code for barplot for transcription factors 
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$Pro_LogFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# Reorder hgnc_symbol based on Pro_LogFC
+TF_Dataforplot_top_20$hgnc_symbol &lt;- factor(TF_Dataforplot_top_20$hgnc_symbol, 
+                                            levels = TF_Dataforplot_top_20$hgnc_symbol[order(TF_Dataforplot_top_20$Pro_LogFC)])
+
+# Plot
+ggplot(TF_Dataforplot_top_20, aes(x = hgnc_symbol, y = Pro_LogFC, fill = Modules)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(
+    y = &quot;logFC&quot;,
+    fill = &quot;Modules&quot;
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_identity() +
+  ylim(c(-3.5, 3.5))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># ENZYMES: 
+results_df_DOXcorr &lt;- results_df[results_df$Modules %in% c(&quot;darkgreen&quot;, &quot;salmon&quot;), ]
+
+results_df_DOXcorr$Disease</code></pre>
+<pre><code> [1] &quot;stress granules&quot;        &quot;signaling peptides&quot;     &quot;transcription factors&quot; 
+ [4] &quot;transporters&quot;           &quot;voltage gated channels&quot; &quot;sarcomere&quot;             
+ [7] &quot;enzymes&quot;                &quot;RNA binding proteins&quot;   &quot;RBPs&quot;                  
+[10] &quot;TFs&quot;                    &quot;stress granules&quot;        &quot;signaling peptides&quot;    
+[13] &quot;transcription factors&quot;  &quot;transporters&quot;           &quot;voltage gated channels&quot;
+[16] &quot;sarcomere&quot;              &quot;enzymes&quot;                &quot;RNA binding proteins&quot;  
+[19] &quot;RBPs&quot;                   &quot;TFs&quot;                   </code></pre>
+<pre class="r"><code>results_df_DOXcorr_trans &lt;- results_df_DOXcorr[results_df_DOXcorr$Disease == &quot;enzymes&quot;, ]
+
+results_df_DOXcorr_Secreted &lt;- c(strsplit(results_df_DOXcorr_trans$IntersectingGenes, &quot;;&quot;)[[1]], 
+           strsplit(results_df_DOXcorr_trans$IntersectingGenes, &quot;;&quot;)[[2]])
+
+results_df_DOXcorr_Secreted_hub &lt;- results_df_DOXcorr_Secreted
+
+TF_Dataforplot &lt;- New_RNA_PRO_DF_3[New_RNA_PRO_DF_3$Protein %in% results_df_DOXcorr_Secreted_hub, ]
+
+
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$logFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# ------ Adjusted code for barplot for transcription factors 
+# Order the data frame by the absolute values of logFC in descending order
+TF_Dataforplot_ordered &lt;- TF_Dataforplot[order(-abs(TF_Dataforplot$Pro_LogFC)), ]
+
+# Subset the top 20 rows
+TF_Dataforplot_top_20 &lt;- head(TF_Dataforplot_ordered, 20)
+
+# Reorder hgnc_symbol based on Pro_LogFC
+TF_Dataforplot_top_20$hgnc_symbol &lt;- factor(TF_Dataforplot_top_20$hgnc_symbol, 
+                                            levels = TF_Dataforplot_top_20$hgnc_symbol[order(TF_Dataforplot_top_20$Pro_LogFC)])
+
+# Plot for all enzymes
+ggplot(TF_Dataforplot_top_20, aes(x = hgnc_symbol, y = Pro_LogFC, fill = Modules)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(
+    y = &quot;logFC&quot;,
+    fill = &quot;Modules&quot;
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_identity() +
+  ylim(c(-3.5, 3.5))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20protein%20categories-6.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>TF_Dataforplot_top_20 %&gt;% dim()</code></pre>
+<pre><code>[1] 20 44</code></pre>
+</div>
+<div id="fig-4c-enriched-tf-categories" class="section level1">
+<h1>Fig-4C Enriched TF categories</h1>
+<pre class="r"><code>#### Heatmap #### 
+# Plot results 
+results_df &lt;- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = dbd_uniprot_list_test)
+
+
+results_df[(results_df$FisherPValue &lt; 0.05) &amp; (results_df$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;)), ]</code></pre>
+<pre><code>                  Modules     Disease ChiSqPValue FisherPValue OddsRatio
+green_C2H2 ZF       green     C2H2 ZF          NA 0.0004475495  5.663042
+green_GATA          green        GATA          NA 0.0026496519       Inf
+green_Homeodomain   green Homeodomain          NA 0.0043440227 12.498067
+                  PercentOverlap
+green_C2H2 ZF           47.36842
+green_GATA             100.00000
+green_Homeodomain       66.66667
+                                                               IntersectingGenes
+green_C2H2 ZF     O43823;O95251;P49711;Q5BKZ1;Q86V15;Q92784;Q96ME7;Q9UEG4;Q9UL40
+green_GATA                                                  P43694;Q86YP4;Q8WXI9
+green_Homeodomain                                    O00470;P39880;P40424;Q9H2P0</code></pre>
+<pre class="r"><code>melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+
+melted_results_2 &lt;- melted_results
+
+
+melted_results_2 &lt;- melted_results
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+
+melted_results_3 &lt;- melted_results_2
+melted_results_4 &lt;- melted_results_3[melted_results_3$Modules %in% c(&quot;green&quot;, &quot;darkgreen&quot;, &quot;midnightblue&quot;, &quot;salmon&quot;, &quot;lightyellow&quot;), ]
+
+melted_results_4$Disease %&gt;% unique()</code></pre>
+<pre><code> [1] &quot;ARID/BRIGHT&quot;      &quot;AT hook&quot;          &quot;BED ZF&quot;           &quot;bHLH&quot;            
+ [5] &quot;bZIP&quot;             &quot;C2H2 ZF&quot;          &quot;CBF/NF-Y&quot;         &quot;CSD&quot;             
+ [9] &quot;CUT&quot;              &quot;CxxC&quot;             &quot;CxxC ZF&quot;          &quot;Ets&quot;             
+[13] &quot;GATA&quot;             &quot;Grainyhead&quot;       &quot;GTF2I-like&quot;       &quot;HMG/Sox&quot;         
+[17] &quot;Homeodomain&quot;      &quot;MADS box&quot;         &quot;MBD&quot;              &quot;Myb/SANT&quot;        
+[21] &quot;Nuclear receptor&quot; &quot;p53&quot;              &quot;Rel&quot;              &quot;RFX&quot;             
+[25] &quot;SMAD&quot;             &quot;STAT&quot;             &quot;TEA&quot;              &quot;Unknown&quot;         </code></pre>
+<pre class="r"><code>melted_results_5 &lt;- melted_results_4[melted_results_4$Disease %in% c(&quot;Homeodomain&quot;,&quot;GATA&quot;,&quot;C2H2 ZF&quot;), ]
+
+
+
+ggplot(melted_results_5, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 5, 50)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 6, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.6, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20TF%20factor%20DBD-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#### Barplots #### 
+results_df_DOXcorr &lt;- results_df[results_df$Modules == &quot;green&quot;, ]
+
+
+results_df_DOXcorr_Secreted &lt;- strsplit(results_df_DOXcorr$IntersectingGenes, &quot;;&quot;) %&gt;% unlist()
+
+results_df_DOXcorr_Secreted_hub &lt;- results_df_DOXcorr_Secreted
+
+
+ggplot(New_RNA_PRO_DF_3[New_RNA_PRO_DF_3$Protein %in% results_df_DOXcorr_Secreted_hub, ], aes(x = hgnc_symbol, y = Pro_LogFC, fill = Modules)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(
+    x = &quot;Protein&quot;,
+    y = &quot;logFC&quot;,
+    fill = &quot;Modules&quot;,
+    title = &quot;DOX corr. transcrption factors&quot;
+  ) +
+  theme_dark() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_fill_identity()+
+  ylim(c(-3, 3))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20TF%20factor%20DBD-2.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fig-4d-enriched-rbp-categories" class="section level1">
+<h1>Fig-4D Enriched RBP categories</h1>
+<pre class="r"><code>RBP_pros_uniprot_3 %&gt;% head()</code></pre>
+<pre><code>  X ensembl_gene_id uniprotswissprot hgnc_symbol RBP.name Essential.Genes
+1 1 ENSG00000003756           P52756        RBM5     RBM5               1
+2 2 ENSG00000004478           Q02790       FKBP4    FKBP4               0
+3 3 ENSG00000004534           P78332        RBM6     RBM6               0
+4 4 ENSG00000004700           P46063       RECQL    RECQL               0
+5 5 ENSG00000005007           Q92900        UPF1     UPF1               1
+6 6 ENSG00000005100           Q9H6R0       DHX33    DHX33               1
+  Splicing.regulation Spliceosome RNA.modification X3..end.processing
+1                   1           1                0                  0
+2                   0           0                0                  0
+3                   1           0                0                  0
+4                   0           0                0                  0
+5                   0           0                0                  0
+6                   0           0                0                  0
+  rRNA.processing Ribosome...basic.translation RNA.stability...decay
+1               0                            0                     0
+2               0                            0                     0
+3               0                            0                     0
+4               0                            0                     0
+5               0                            0                     1
+6               0                            0                     0
+  microRNA.processing RNA.localization RNA.export Translation.regulation
+1                   0                0          0                      0
+2                   1                0          0                      0
+3                   0                0          0                      0
+4                   0                0          0                      0
+5                   0                0          1                      1
+6                   0                0          0                      1
+  tRNA.regulation mitochondrial.RNA.regulation Viral.RNA.regulation
+1               0                            0                    0
+2               0                            0                    0
+3               0                            0                    0
+4               0                            0                    0
+5               0                            0                    0
+6               0                            0                    0
+  snoRNA...snRNA...telomerase P.body...stress.granules Exon.Junction.Complex
+1                           0                        0                     0
+2                           0                        0                     0
+3                           0                        0                     0
+4                           0                        0                     0
+5                           0                        0                     0
+6                           0                        0                     0
+  Novel.RBP Other Nuclei Nucleolus Speckles PML.bodies Cajal.bodies Cytoplasm
+1         0     0      1         0        0          0            0         1
+2         0     0      1         0        0          0            0         1
+3         0     0      0         0        0          0            0         1
+4         1     0      1         0        0          0            0         1
+5         0     0      1         0        1          0            0         1
+6         0     0      1         1        0          0            0         1
+  Mitochondria Golgi P.bodies ER Cytoskeleton Microtubule Actin
+1            1     0        0  0            0           0     0
+2            0     0        0  0            0           0     0
+3            0     0        0  0            0           0     0
+4            0     0        0  0            0           0     0
+5            0     0        1  0            0           0     0
+6            0     0        0  0            0           0     0
+  Nuclear.release.mitosis Cell.Cortex RRM ZNF KH Helicase Nuclease dRBM PUM_HD
+1                       0           0   1   1  0        0        0    0      0
+2                       0           0   0   0  0        0        0    0      0
+3                       0           0   1   0  0        0        0    0      0
+4                       1           0   0   0  0        1        0    0      0
+5                       0           0   0   0  0        0        0    0      0
+6                       0           0   0   0  0        1        0    0      0
+  eCLIP.HepG1 eCLIP.K561 RNAseq.HepG1 RNAseq.K561 RBNS Image.HepG1
+1           1          0            1           0    0           1
+2           1          0            1           1    0           1
+3           0          0            0           0    1           1
+4           0          0            1           1    0           1
+5           1          1            1           1    0           1
+6           0          0            0           0    0           1
+  ChIPseq.HepG1 ChIPseq.K561
+1             0            0
+2             0            0
+3             0            0
+4             0            0
+5             0            0
+6             0            0</code></pre>
+<pre class="r"><code># RBPs all types
+HPA_General2_test$RBP_All_types &lt;- RBP_pros_uniprot_3$uniprotswissprot
+
+
+# RBPs thaat are DNA Binding 
+HPA_General2_test$RBP_DNA_Binding &lt;-
+RBP_pros_uniprot_3[RBP_pros_uniprot_3$ChIPseq.HepG1 == 1|RBP_pros_uniprot_3$ChIPseq.K561 == 1 , ]$uniprotswissprot
+
+
+# RBPs that are essential
+HPA_General2_test$RBP_Essential &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Essential.Genes == 1, ]$uniprotswissprot
+
+
+# RBP Splicing.regulation
+HPA_General2_test$RBP_Splicing_regulation &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Splicing.regulation == 1, ]$uniprotswissprot
+
+
+# RBP spliceosome
+HPA_General2_test$RBP_spliceosome &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Spliceosome == 1, ]$uniprotswissprot
+
+
+# RBP RNA modifyinig
+HPA_General2_test$RBP_RNA_modifynig &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$RNA.modification == 1, ]$uniprotswissprot
+
+
+# RBP RNA modifyinig
+HPA_General2_test$RBP_3UTR_processing &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$X3..end.processing == 1, ]$uniprotswissprot
+
+
+# RBP RNA modifyinig
+HPA_General2_test$RBP_rRNA_processing &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$rRNA.processing == 1, ]$uniprotswissprot
+
+
+# RBP Ribosome translation 
+HPA_General2_test$RBP_Ribosome_translation &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Ribosome...basic.translation == 1, ]$uniprotswissprot
+
+
+# RBP mRNA_stability
+HPA_General2_test$RBP_mRNA_stability &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$RNA.stability...decay == 1, ]$uniprotswissprot
+
+
+# RBP microRNA_processing 
+HPA_General2_test$RBP_microRNA_processing &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$microRNA.processing == 1, ]$uniprotswissprot
+
+
+# RBP RNA.localization 
+HPA_General2_test$RBP_RNA_localization &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$RNA.localization == 1, ]$uniprotswissprot
+
+
+# RBP RNA.export 
+HPA_General2_test$RBP_RNA_export &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$RNA.export == 1, ]$uniprotswissprot
+
+
+# RBP_Translation_reg
+HPA_General2_test$RBP_Translation_reg &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Translation.regulation == 1, ]$uniprotswissprot
+
+
+# RBP tRNA.regulation
+HPA_General2_test$RBP_tRNA.regulation &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$tRNA.regulation == 1, ]$uniprotswissprot
+
+
+# RBP_mitochond._RNA_reg
+HPA_General2_test$RBP_mitochond._RNA_reg &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$mitochondrial.RNA.regulation == 1, ]$uniprotswissprot
+
+
+# RBP_Stress_granules
+HPA_General2_test$RBP_Stress_granules &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$P.body...stress.granules == 1, ]$uniprotswissprot
+
+
+# RBP_Exon.Junction.Complex
+HPA_General2_test$RBP_Exon.Junction.Complex &lt;- RBP_pros_uniprot_3[RBP_pros_uniprot_3$Exon.Junction.Complex == 1, ]$uniprotswissprot
+
+
+HPA_General4_test &lt;-HPA_General2_test
+
+
+HPA_General4_test &lt;- HPA_General2_test[5:length(HPA_General2_test)]
+
+names(HPA_General4_test) &lt;- c(&quot;DNA Binding&quot; ,&quot;Essential&quot;, &quot;splicing regulation&quot;,&quot;spliceosome&quot;, &quot;RNA_modifynig&quot;, &quot;3&#39;UTR processing&quot;, &quot;rRNA_processing&quot;, &quot;Ribosome-translation&quot;, &quot;mRNA_stability&quot;, &quot;microRNA processing&quot;,&quot;RNA localization&quot;, &quot;RNA_export&quot;, &quot;Translation regulation&quot;, &quot;tRNA regulation&quot;, &quot;mitochondrial RNA regulation&quot;, &quot;stress granules&quot;, &quot;exon junction complex&quot;, &quot;All RBP types&quot;)
+
+
+
+
+results_df &lt;- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = HPA_General4_test)
+
+
+melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+
+melted_results_2 &lt;- melted_results
+
+melted_results_2 &lt;- melted_results
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+melted_results_3 &lt;- melted_results_2[melted_results_2$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;), ]
+thingstosubset &lt;- melted_results_3[(melted_results_3$FisherPValue&lt; 0.05)&amp; (melted_results_3$OddsRatio &gt; 1), ]$Disease
+thingstosubset</code></pre>
+<pre><code> [1] &quot;DNA Binding&quot;                  &quot;Essential&quot;                   
+ [3] &quot;splicing regulation&quot;          &quot;spliceosome&quot;                 
+ [5] &quot;3&#39;UTR processing&quot;             &quot;rRNA_processing&quot;             
+ [7] &quot;mRNA_stability&quot;               &quot;microRNA processing&quot;         
+ [9] &quot;RNA localization&quot;             &quot;RNA_export&quot;                  
+[11] &quot;Translation regulation&quot;       &quot;mitochondrial RNA regulation&quot;
+[13] &quot;stress granules&quot;              &quot;All RBP types&quot;               
+[15] &quot;Essential&quot;                    &quot;Ribosome-translation&quot;        
+[17] &quot;mRNA_stability&quot;               &quot;microRNA processing&quot;         
+[19] &quot;Translation regulation&quot;       &quot;stress granules&quot;             
+[21] &quot;exon junction complex&quot;        &quot;All RBP types&quot;               
+[23] &quot;DNA Binding&quot;                  &quot;Essential&quot;                   
+[25] &quot;splicing regulation&quot;          &quot;spliceosome&quot;                 
+[27] &quot;3&#39;UTR processing&quot;             &quot;rRNA_processing&quot;             
+[29] &quot;mRNA_stability&quot;               &quot;microRNA processing&quot;         
+[31] &quot;RNA localization&quot;             &quot;RNA_export&quot;                  
+[33] &quot;Translation regulation&quot;       &quot;mitochondrial RNA regulation&quot;
+[35] &quot;stress granules&quot;              &quot;All RBP types&quot;               
+[37] &quot;Essential&quot;                    &quot;Ribosome-translation&quot;        
+[39] &quot;mRNA_stability&quot;               &quot;microRNA processing&quot;         
+[41] &quot;Translation regulation&quot;       &quot;stress granules&quot;             
+[43] &quot;exon junction complex&quot;        &quot;All RBP types&quot;               </code></pre>
+<pre class="r"><code>melted_results_4 &lt;- melted_results_3[melted_results_3$Disease %in% thingstosubset, ]
+
+
+# Vertical
+ggplot(melted_results_4, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 3, 100)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.6, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20RBP%20categories-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="fig-4e-enriched-enzyme-categories" class="section level1">
+<h1>Fig-4E Enriched Enzyme categories</h1>
+<pre class="r"><code># Get the list of .tsv files
+file_names &lt;- list.files(path = folder_path, pattern = &quot;\\.tsv$&quot;, full.names = TRUE)
+
+
+
+# Read each file and extract the &#39;Uniprot&#39; column
+HPA_Metabo &lt;- lapply(file_names, function(file) {
+  data &lt;- read.table(file, header = TRUE, sep = &quot;\t&quot;) # for tab-separated values
+  return(data$Uniprot) # &#39;Uniprot&#39; is column name
+})
+
+
+# Name the list elements without the full path and extension
+names(HPA_Metabo) &lt;- sapply(strsplit(basename(file_names), &quot;\\.&quot;), `[`, 1)
+EnzymeClassNamesTosave &lt;- names(HPA_Metabo)
+
+
+EnzymeTable %&gt;% head()</code></pre>
+<pre><code>  X                      x                                        Name
+1 1       pathway_Acyl-CoA                         Acyl-CoA hydrolysis
+2 2 pathway_Acylglycerides                   Acylglycerides metabolism
+3 3       pathway_Alanine_ Alanine; aspartate and glutamate metabolism
+4 4          pathway_Amino Amino sugar and nucleotide sugar metabolism
+5 5 pathway_Aminoacyl-tRNA                 Aminoacyl-tRNA biosynthesis
+6 6       pathway_Androgen                         Androgen metabolism</code></pre>
+<pre class="r"><code>colnames(EnzymeTable) &lt;- c(&quot;ID&quot;, &quot;Filename&quot;, &quot;Description&quot;)
+EnzymeTable %&gt;% head()</code></pre>
+<pre><code>  ID               Filename                                 Description
+1  1       pathway_Acyl-CoA                         Acyl-CoA hydrolysis
+2  2 pathway_Acylglycerides                   Acylglycerides metabolism
+3  3       pathway_Alanine_ Alanine; aspartate and glutamate metabolism
+4  4          pathway_Amino Amino sugar and nucleotide sugar metabolism
+5  5 pathway_Aminoacyl-tRNA                 Aminoacyl-tRNA biosynthesis
+6  6       pathway_Androgen                         Androgen metabolism</code></pre>
+<pre class="r"><code>names(HPA_Metabo) &lt;- EnzymeTable$Description
+
+HPA_Metabo$`Beta oxidation of fatty acids` &lt;- unique(unlist(c(HPA_Metabo[10:21])))
+HPA_Metabo$`Carnitine shuttle` &lt;- unique(unlist(c(HPA_Metabo[31:33])))
+HPA_Metabo$`Fatty acid activaton` &lt;- unique(unlist(c(HPA_Metabo[46:47])))
+HPA_Metabo$`Fatty acid biosynthesis` &lt;- unique(unlist(c(HPA_Metabo[49:51])))
+
+
+HPA_Metabo2 &lt;- HPA_Metabo[c(1,2,3,4,5,135,136,137,22,37,40,41,42,48,56,60,62,63,66,70,92,95,103,104,105,106,107,108,109,111,113)]
+
+
+# Plot results 
+results_df &lt;- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = HPA_Metabo2)
+
+
+melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+
+melted_results_2 &lt;- melted_results
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+
+Enzyme_termlistsubset &lt;- melted_results_2[(melted_results_2$FisherPValue &lt;0.05) &amp; (melted_results_2$OddsRatio &gt; 1) &amp; (melted_results_2$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;)), ]$Disease %&gt;% unique()
+Enzyme_termlistsubset</code></pre>
+<pre><code>[1] &quot;Oxidative phosphorylation&quot;                  
+[2] &quot;Amino sugar and nucleotide sugar metabolism&quot;
+[3] &quot;Beta oxidation of fatty acids&quot;              
+[4] &quot;Fatty acid activaton&quot;                       
+[5] &quot;Cysteine and methionine metabolism&quot;         
+[6] &quot;Drug metabolism&quot;                            
+[7] &quot;Fatty acid oxidation&quot;                       
+[8] &quot;Glutathione metabolism&quot;                     
+[9] &quot;Purine metabolism&quot;                          </code></pre>
+<pre class="r"><code>melted_results_3 &lt;- melted_results_2[(melted_results_2$Disease %in% Enzyme_termlistsubset) &amp; ((melted_results_2$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;))), ]
+  
+
+# Vertical
+ggplot(melted_results_3, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;darkviolet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(0, 3, 60)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.6, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20Enzyme%20categories-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>EZ_subset &lt;- strsplit(melted_results_3$value, &quot;;&quot;) %&gt;% unlist() %&gt;% unique()
+
+EZ_Dataforplot_ordered &lt;- TF_Dataforplot_ordered[TF_Dataforplot_ordered$Protein %in% EZ_subset, ]
+
+
+
+
+EZ_Dataforplot_ordered &lt;- EZ_Dataforplot_ordered[order(-abs(EZ_Dataforplot_ordered$Pro_LogFC)), ]
+
+# Subset the top 20 rows
+EZ_Dataforplot_ordered_top_20 &lt;- head(EZ_Dataforplot_ordered, 20)
+
+# Reorder hgnc_symbol based on Pro_LogFC
+EZ_Dataforplot_ordered_top_20$hgnc_symbol &lt;- factor(EZ_Dataforplot_ordered_top_20$hgnc_symbol, 
+                                            levels = EZ_Dataforplot_ordered_top_20$hgnc_symbol[order(EZ_Dataforplot_ordered_top_20$Pro_LogFC)])
+
+# Plot for all enzymes
+ggplot(EZ_Dataforplot_ordered_top_20, aes(x = hgnc_symbol, y = Pro_LogFC, fill = Modules)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  labs(
+    y = &quot;logFC&quot;,
+    fill = &quot;Modules&quot;
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_identity() +
+  ylim(c(-3.5, 3.5))</code></pre>
+<p><img src="figure/Johnson_DOX_24_4.Rmd/Enriched%20Enzyme%20categories-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur/Monterey 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] grid      stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] scales_1.2.1                           
+ [2] ReactomePA_1.40.0                      
+ [3] impute_1.70.0                          
+ [4] WGCNA_1.72-1                           
+ [5] fastcluster_1.2.3                      
+ [6] dynamicTreeCut_1.63-1                  
+ [7] BioNERO_1.4.2                          
+ [8] reshape2_1.4.4                         
+ [9] ggridges_0.5.4                         
+[10] biomaRt_2.52.0                         
+[11] ggvenn_0.1.10                          
+[12] UpSetR_1.4.0                           
+[13] DOSE_3.22.1                            
+[14] variancePartition_1.26.0               
+[15] clusterProfiler_4.4.4                  
+[16] pheatmap_1.0.12                        
+[17] qvalue_2.28.0                          
+[18] Homo.sapiens_1.3.1                     
+[19] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+[20] org.Hs.eg.db_3.15.0                    
+[21] GO.db_3.15.0                           
+[22] OrganismDbi_1.38.1                     
+[23] GenomicFeatures_1.48.4                 
+[24] AnnotationDbi_1.58.0                   
+[25] cluster_2.1.4                          
+[26] ggfortify_0.4.16                       
+[27] lubridate_1.9.2                        
+[28] forcats_1.0.0                          
+[29] stringr_1.5.0                          
+[30] dplyr_1.1.2                            
+[31] purrr_1.0.2                            
+[32] readr_2.1.4                            
+[33] tidyr_1.3.0                            
+[34] tibble_3.2.1                           
+[35] ggplot2_3.4.3                          
+[36] tidyverse_2.0.0                        
+[37] RColorBrewer_1.1-3                     
+[38] RUVSeq_1.30.0                          
+[39] edgeR_3.38.4                           
+[40] limma_3.52.4                           
+[41] EDASeq_2.30.0                          
+[42] ShortRead_1.54.0                       
+[43] GenomicAlignments_1.32.1               
+[44] SummarizedExperiment_1.26.1            
+[45] MatrixGenerics_1.8.1                   
+[46] matrixStats_1.0.0                      
+[47] Rsamtools_2.12.0                       
+[48] GenomicRanges_1.48.0                   
+[49] Biostrings_2.64.1                      
+[50] GenomeInfoDb_1.32.4                    
+[51] XVector_0.36.0                         
+[52] IRanges_2.30.1                         
+[53] S4Vectors_0.34.0                       
+[54] BiocParallel_1.30.4                    
+[55] Biobase_2.56.0                         
+[56] BiocGenerics_0.42.0                    
+[57] workflowr_1.7.1                        
+
+loaded via a namespace (and not attached):
+  [1] rappdirs_0.3.3         rtracklayer_1.56.1     minet_3.54.0          
+  [4] R.methodsS3_1.8.2      coda_0.19-4            bit64_4.0.5           
+  [7] knitr_1.43             aroma.light_3.26.0     DelayedArray_0.22.0   
+ [10] R.utils_2.12.2         rpart_4.1.19           data.table_1.14.8     
+ [13] hwriter_1.3.2.1        KEGGREST_1.36.3        RCurl_1.98-1.12       
+ [16] doParallel_1.0.17      generics_0.1.3         preprocessCore_1.58.0 
+ [19] callr_3.7.3            RhpcBLASctl_0.23-42    RSQLite_2.3.1         
+ [22] shadowtext_0.1.2       bit_4.0.5              tzdb_0.4.0            
+ [25] enrichplot_1.16.2      xml2_1.3.5             httpuv_1.6.11         
+ [28] viridis_0.6.4          xfun_0.40              hms_1.1.3             
+ [31] jquerylib_0.1.4        evaluate_0.21          promises_1.2.1        
+ [34] fansi_1.0.4            restfulr_0.0.15        progress_1.2.2        
+ [37] caTools_1.18.2         dbplyr_2.3.3           htmlwidgets_1.6.2     
+ [40] igraph_1.5.1           DBI_1.1.3              ggnewscale_0.4.9      
+ [43] backports_1.4.1        annotate_1.74.0        aod_1.3.2             
+ [46] deldir_1.0-9           vctrs_0.6.3            abind_1.4-5           
+ [49] cachem_1.0.8           withr_2.5.0            ggforce_0.4.1         
+ [52] checkmate_2.2.0        treeio_1.20.2          prettyunits_1.1.1     
+ [55] ape_5.7-1              lazyeval_0.2.2         crayon_1.5.2          
+ [58] genefilter_1.78.0      labeling_0.4.2         pkgconfig_2.0.3       
+ [61] tweenr_2.0.2           nlme_3.1-163           nnet_7.3-19           
+ [64] rlang_1.1.1            lifecycle_1.0.3        downloader_0.4        
+ [67] filelock_1.0.2         BiocFileCache_2.4.0    rprojroot_2.0.3       
+ [70] polyclip_1.10-4        graph_1.74.0           Matrix_1.5-4.1        
+ [73] aplot_0.2.0            NetRep_1.2.7           boot_1.3-28.1         
+ [76] base64enc_0.1-3        GlobalOptions_0.1.2    whisker_0.4.1         
+ [79] processx_3.8.2         png_0.1-8              viridisLite_0.4.2     
+ [82] rjson_0.2.21           bitops_1.0-7           getPass_0.2-2         
+ [85] R.oo_1.25.0            ggnetwork_0.5.12       KernSmooth_2.23-22    
+ [88] blob_1.2.4             shape_1.4.6            jpeg_0.1-10           
+ [91] gridGraphics_0.5-1     reactome.db_1.81.0     graphite_1.42.0       
+ [94] memoise_2.0.1          magrittr_2.0.3         plyr_1.8.8            
+ [97] gplots_3.1.3           zlibbioc_1.42.0        compiler_4.2.0        
+[100] scatterpie_0.2.1       BiocIO_1.6.0           clue_0.3-64           
+[103] intergraph_2.0-3       lme4_1.1-34            cli_3.6.1             
+[106] patchwork_1.1.3        ps_1.7.5               htmlTable_2.4.1       
+[109] Formula_1.2-5          mgcv_1.9-0             MASS_7.3-60           
+[112] tidyselect_1.2.0       stringi_1.7.12         highr_0.10            
+[115] yaml_2.3.7             GOSemSim_2.22.0        locfit_1.5-9.8        
+[118] latticeExtra_0.6-30    ggrepel_0.9.3          sass_0.4.7            
+[121] fastmatch_1.1-4        tools_4.2.0            timechange_0.2.0      
+[124] parallel_4.2.0         circlize_0.4.15        rstudioapi_0.15.0     
+[127] foreign_0.8-84         foreach_1.5.2          git2r_0.32.0          
+[130] gridExtra_2.3          farver_2.1.1           ggraph_2.1.0          
+[133] digest_0.6.33          BiocManager_1.30.22    networkD3_0.4         
+[136] Rcpp_1.0.11            broom_1.0.5            later_1.3.1           
+[139] httr_1.4.7             ComplexHeatmap_2.12.1  GENIE3_1.18.0         
+[142] Rdpack_2.5             colorspace_2.1-0       XML_3.99-0.14         
+[145] fs_1.6.3               splines_4.2.0          statmod_1.5.0         
+[148] yulab.utils_0.0.8      RBGL_1.72.0            tidytree_0.4.5        
+[151] graphlayouts_1.0.0     ggplotify_0.1.2        xtable_1.8-4          
+[154] jsonlite_1.8.7         nloptr_2.0.3           ggtree_3.4.4          
+[157] tidygraph_1.2.3        ggfun_0.1.2            R6_2.5.1              
+[160] Hmisc_5.1-0            pillar_1.9.0           htmltools_0.5.6       
+[163] glue_1.6.2             fastmap_1.1.1          minqa_1.2.5           
+[166] codetools_0.2-19       fgsea_1.22.0           utf8_1.2.3            
+[169] sva_3.44.0             lattice_0.21-8         bslib_0.5.1           
+[172] network_1.18.1         pbkrtest_0.5.2         curl_5.0.2            
+[175] gtools_3.9.4           interp_1.1-4           survival_3.5-7        
+[178] statnet.common_4.9.0   rmarkdown_2.24         munsell_0.5.0         
+[181] GetoptLong_1.0.5       DO.db_2.9              GenomeInfoDbData_1.2.8
+[184] iterators_1.0.14       gtable_0.3.4           rbibutils_2.2.15      </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

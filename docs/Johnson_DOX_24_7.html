@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Omar Johnson" />
+
+<meta name="date" content="2024-07-22" />
+
+<title>Johnson_DOX_24_7</title>
+
+<script src="site_libs/header-attrs-2.24/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Johnson_DOX_24</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Johnson_DOX_24_7</h1>
+<h4 class="author">Omar Johnson</h4>
+<h4 class="date">2024-07-22</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2024-07-23
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>DOX_24_Github/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20240723code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20240723)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20240723code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20240723)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong88c6686">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 88c6686
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong88c6686"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 88c6686.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    analysis/Johnson_DOX_24_7.html
+    Ignored:    analysis/Johnson_DOX_24_8.html
+    Ignored:    analysis/Johnson_DOX_24_RUV_Limma.html
+
+Untracked files:
+    Untracked:  Fig_2.Rmd
+    Untracked:  Fig_2.html
+    Untracked:  analysis/Johnson_DOX_24_RUV_Limma.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/Johnson_DOX_24_7.Rmd</code>) and
+HTML (<code>docs/Johnson_DOX_24_7.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+88c6686
+</td>
+<td>
+Omar-Johnson
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+Publish the initial files for myproject
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-libraries" class="section level1">
+<h1>Load Libraries</h1>
+</div>
+<div id="read-in-data" class="section level1">
+<h1>Read in Data</h1>
+</div>
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<pre class="r"><code>perform_module_comparisons_mutexc_2 &lt;- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) &amp;&amp; value_col %in% names(df))) {
+    stop(&quot;Specified columns do not exist in the dataframe.&quot;)
+  }
+
+  # Get a list of all unique modules
+  modules &lt;- unique(df[[module_col]])
+
+  # Initialize an empty list to store combined data frames
+  combined_df_list &lt;- list()
+
+  # Initialize an empty dataframe to store results
+  results &lt;- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data &lt;- df %&gt;% filter(!!sym(module_col) == module) %&gt;% 
+                    mutate(Group = as.character(module))
+
+    # Data for all other modules
+    other_data &lt;- df %&gt;% filter(!!sym(module_col) != module) %&gt;% 
+                    mutate(Group = paste(&quot;Not&quot;, module, sep=&quot;&quot;))
+
+    # Combine current module data with other module data
+    combined_data &lt;- rbind(current_data, other_data)
+
+    # Add the combined data to the list
+    combined_df_list[[module]] &lt;- combined_data
+
+    # Perform the Wilcoxon test
+    test_result &lt;- wilcox.test(current_data[[value_col]], other_data[[value_col]])
+
+    # Add the results to the dataframe
+    results &lt;- rbind(results, data.frame(Module1 = module,
+                                         Module2 = &quot;Others&quot;,
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(list(&quot;results&quot; = results, &quot;combined_data&quot; = combined_df_list))
+}
+
+
+perform_module_disease_analysis_genes_3 &lt;- function(toptable, diseaseGenes) {
+  # Prepare an empty list to collect results
+  results &lt;- list()
+  
+  # Ensure &#39;Modules&#39; and &#39;hgnc_symbol&#39; columns exist in &#39;toptable&#39;
+  if(!&quot;Modules&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;Modules&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  if(!&quot;hgnc_symbol&quot; %in% names(toptable)) {
+    stop(&quot;Column &#39;hgnc_symbol&#39; not found in the &#39;toptable&#39;.&quot;)
+  }
+  
+  # Filter disease genes to include only those that are expressed in toptable
+  expressedDiseaseGenes &lt;- lapply(diseaseGenes, function(genes) {
+    intersect(genes, toptable$hgnc_symbol)
+  })
+  
+  # Loop through each module
+  modules &lt;- unique(toptable$Modules)
+  for (module in modules) {
+    # Get the genes in the module
+    moduleGenes &lt;- toptable$hgnc_symbol[toptable$Modules == module]
+    
+    # Loop through each disease gene set
+    for (diseaseName in names(expressedDiseaseGenes)) {
+      # Find the intersecting genes between the module and the expressed disease genes
+      diseaseModuleIntersect &lt;- intersect(moduleGenes, expressedDiseaseGenes[[diseaseName]])
+      
+      # Calculate elements for the contingency table
+      numIntersect = length(diseaseModuleIntersect)
+      numInModuleNotDisease = length(moduleGenes) - numIntersect
+      numInDiseaseNotModule = length(expressedDiseaseGenes[[diseaseName]]) - numIntersect
+      numInNeither = nrow(toptable) - (numIntersect + numInModuleNotDisease + numInDiseaseNotModule)
+      
+      # Build the contingency table
+      table &lt;- matrix(c(
+        numIntersect, # Both in disease list and module
+        numInModuleNotDisease, # In module but not disease list
+        numInDiseaseNotModule, # In disease list but not module
+        numInNeither # In neither list
+      ), nrow = 2, byrow = TRUE)
+      
+      # Perform chi-squared test and Fisher&#39;s exact test with error handling
+      chiSqTestResult &lt;- tryCatch({
+        chisq.test(table, correct = TRUE)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      fisherTestResult &lt;- tryCatch({
+        fisher.test(table)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      # Calculate percent overlap, handle division by zero
+      percentOverlap &lt;- if (length(moduleGenes) &gt; 0) {
+        (numIntersect / length(expressedDiseaseGenes[[diseaseName]])) * 100
+      } else {
+        0
+      }
+      
+      # Convert intersecting genes to a single character string
+      intersectingGenesStr &lt;- if (numIntersect &gt; 0) {
+        paste(diseaseModuleIntersect, collapse = &quot;;&quot;)
+      } else {
+        &quot;&quot;  # Use an empty string to indicate no intersection
+      }
+      
+      # Append to results list
+      results[[paste(module, diseaseName, sep = &quot;_&quot;)]] &lt;- data.frame(
+        Modules = module,
+        Disease = diseaseName,
+        ChiSqPValue = chiSqTestResult$p.value,
+        FisherPValue = fisherTestResult$p.value,
+        PercentOverlap = percentOverlap,
+        OddsRatio = fisherTestResult$estimate, 
+        IntersectingGenes = intersectingGenesStr
+      )
+    }
+  }
+  
+  # Combine results into a single data frame
+  results_df &lt;- do.call(rbind, results)
+  return(results_df)
+}
+
+
+
+# Function assignment 
+perform_fisher_test_FP &lt;- function(vec1, vec2, vec1_name, vec2_name, plot = FALSE) {
+  # Create labeled factors for vec1 and vec2
+  vec1_label &lt;- factor(vec1, labels = c(paste0(&quot;Not&quot;, vec1_name), paste0(&quot;Is&quot;, vec1_name)))
+  vec2_label &lt;- factor(vec2, labels = c(paste0(&quot;Not&quot;, vec2_name), paste0(&quot;Is&quot;, vec2_name)))
+
+  # Create contingency table with labeled factors
+  table &lt;- table(vec1_label, vec2_label)
+
+  # Perform Fisher&#39;s exact test
+  test_result &lt;- fisher.test(table)
+  p_value &lt;- test_result$p.value
+OR &lt;- test_result$estimate
+CI &lt;- test_result$conf.int
+
+  # Prepare result
+  result &lt;- list(
+    ContingencyTable = table,
+    PValue = p_value, 
+    Odds_ratio = test_result$estimate,
+    Confidence_Interval = test_result$conf.int
+  )
+
+  # Generate plot if required
+  if (plot) {
+    # Convert table to data frame for ggplot
+    table_df &lt;- as.data.frame(as.table(table))
+    colnames(table_df) &lt;- c(&quot;vec1_label&quot;, &quot;vec2_label&quot;, &quot;Freq&quot;)
+
+    # Calculate totals for each vec1_label
+    totals &lt;- aggregate(Freq ~ vec1_label, data = table_df, sum)
+
+    # Merge totals with table_df and calculate percentages
+    table_df &lt;- merge(table_df, totals, by = &quot;vec1_label&quot;, all.x = TRUE)
+    table_df$Percentage &lt;- with(table_df, Freq.x / Freq.y * 100)
+    table_df$Group &lt;- table_df$vec2_label
+
+    # Stacked bar chart
+    p &lt;- ggplot(table_df, aes(x = vec1_label, y = Percentage, fill = Group)) +
+      geom_bar(stat = &quot;identity&quot;, position = &quot;stack&quot;) +  # Adjust position to &quot;stack&quot;
+      facet_wrap(~ vec1_label) +
+      theme_minimal() +
+      labs(x = vec1_name, y = &quot;Percentage&quot;, fill = vec2_name, title = paste(&quot;&quot;)) +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+    result$Plot &lt;- p
+  }
+
+  return(result)
+}
+
+
+group_by_deciles &lt;- function(x) {
+  deciles &lt;- cut(x, 
+                 breaks = quantile(x, probs = seq(0, 1, by = 0.1), na.rm = TRUE), 
+                 include.lowest = TRUE, 
+                 labels = paste0(&quot;D&quot;, 1:10))
+  return(deciles)
+}</code></pre>
+</div>
+<div id="cvd-module-enrichment" class="section level1">
+<h1>CVD-Module enrichment</h1>
+<pre class="r"><code>BigGWASsumstat &lt;- read_tsv(file = File_path_1)</code></pre>
+<pre><code>Rows: 5709 Columns: 15
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (13): riskAllele, pValueAnnotation, riskFrequency, orValue, beta, ci, ma...
+dbl  (2): pValue, pubmedId
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>BigGWASsumstat$traitName %&gt;% unique() %&gt;% length()</code></pre>
+<pre><code>[1] 154</code></pre>
+<pre class="r"><code>BigGWASsumstat$riskAllele %&gt;% unique() %&gt;% length()</code></pre>
+<pre><code>[1] 4280</code></pre>
+<pre class="r"><code>BigGWASsumstat_sep &lt;- separate_rows(BigGWASsumstat, mappedGenes, sep = &quot;,&quot;)
+BigGWASsumstat[BigGWASsumstat$traitName %in% c(&quot;Anthracycline-induced cardiotoxicity in early breast cancer&quot;,&quot;Anthracycline-induced cardiotoxicity in childhood cancer&quot;, &quot;Anthracycline-induced cardiotoxicity in breast cancer&quot;), ]$mappedGenes</code></pre>
+<pre><code> [1] &quot;BEND4,SHISA3&quot;      &quot;MIR548AB,NDUFA4P2&quot; &quot;MPP4&quot;             
+ [4] &quot;RPL7&quot;              &quot;LINC01982&quot;         &quot;PRUNE2,PCA3&quot;      
+ [7] &quot;CDH13&quot;             &quot;RARG&quot;              &quot;RARG&quot;             
+[10] &quot;POLRMT,FGF22&quot;     </code></pre>
+<pre class="r"><code># Using gsub to remove &#39;(MTAG)&#39; from traitName
+BigGWASsumstat_sep$traitName &lt;- gsub(&quot; \\(MTAG\\)&quot;, &quot;&quot;, BigGWASsumstat_sep$traitName)
+
+
+BigGWASsumstat_sep$traitName &lt;- gsub(&quot;Anthracycline-induced cardiotoxicity in early breast cancer&quot;, &quot;Anthracycline-induced cardiotoxicity&quot;, BigGWASsumstat_sep$traitName)
+
+BigGWASsumstat_sep$traitName &lt;- gsub(&quot;Anthracycline-induced cardiotoxicity in childhood cancer&quot;, &quot;Anthracycline-induced cardiotoxicity&quot;, BigGWASsumstat_sep$traitName)
+
+BigGWASsumstat_sep$traitName &lt;- gsub(&quot;Anthracycline-induced cardiotoxicity in breast cancer&quot;, &quot;Anthracycline-induced cardiotoxicity&quot;, BigGWASsumstat_sep$traitName)
+
+BigGWASsumstat_Exp &lt;- BigGWASsumstat_sep[BigGWASsumstat_sep$mappedGenes %in% New_RNA_PRO_DF_3$hgnc_symbol, ]
+
+
+traits_genes_list &lt;- BigGWASsumstat_Exp %&gt;%
+  group_by(traitName) %&gt;%
+  summarise(Genes = list(mappedGenes)) %&gt;%
+  deframe()
+
+
+diseaseGenes &lt;- traits_genes_list
+
+# Plot results 
+results_df &lt;- perform_module_disease_analysis_genes_3(toptable = New_RNA_PRO_DF_3, diseaseGenes =diseaseGenes)
+
+melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot;,&quot;IntersectingGenes&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+Enriched_diseases &lt;- melted_results[(melted_results$FisherPValue &lt; 0.05) &amp; (melted_results$OddsRatio &gt; 1) &amp; (melted_results$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;)), ]$Disease
+
+Disease_lists_GWAS &lt;- melted_results$Disease %&gt;% unique(
+  ) 
+
+
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+
+melted_results_2 &lt;- melted_results[melted_results$Disease %in% c(&quot;Anthracycline-induced cardiotoxicity&quot; ,&quot;Dilated cardiomyopathy&quot;, &quot;Atrial fibrillation&quot;,&quot;Age-related diseases, mortality and associated endophenotypes&quot;, &quot;Coronary artery disease or fibrinogen levels (pleiotropy)&quot;), ]
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+melted_results_3 &lt;- melted_results_2[melted_results_2$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;), ]
+
+
+# Vertical
+ggplot(melted_results_3, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;violet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(-10, 1, 10)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.3, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_7.Rmd/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>melted_results_3_CVD &lt;- melted_results_3</code></pre>
+</div>
+<div id="cardiovascular-function-module-enrichment"
+class="section level1">
+<h1>Cardiovascular function-Module enrichment</h1>
+<pre class="r"><code>BigGWASsumstat &lt;- read_tsv(file = File_path_2)</code></pre>
+<pre><code>Rows: 41479 Columns: 15
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: &quot;\t&quot;
+chr (13): riskAllele, pValueAnnotation, riskFrequency, orValue, beta, ci, ma...
+dbl  (2): pValue, pubmedId
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>BigGWASsumstat_sep &lt;- separate_rows(BigGWASsumstat, mappedGenes, sep = &quot;,&quot;)
+GWAS_Traits_to_remove &lt;- BigGWASsumstat_sep[BigGWASsumstat_sep$mappedGenes == &quot;-&quot;, ]$traitName %&gt;% unique()
+
+
+
+BigGWASsumstat_Exp &lt;- BigGWASsumstat_sep[BigGWASsumstat_sep$mappedGenes %in% New_RNA_PRO_DF_3$hgnc_symbol, ]
+
+traits_genes_list &lt;- BigGWASsumstat_Exp %&gt;%
+  group_by(traitName) %&gt;%
+  summarise(Genes = list(mappedGenes)) %&gt;%
+  deframe()
+diseaseGenes &lt;- traits_genes_list
+
+
+# Plot results 
+results_df &lt;- perform_module_disease_analysis_genes_3(toptable = New_RNA_PRO_DF_3, diseaseGenes =diseaseGenes)
+
+melted_results &lt;- melt(results_df, id.vars = c(&quot;Modules&quot;, &quot;Disease&quot;, &quot;PercentOverlap&quot;, &quot;FisherPValue&quot;,&quot;OddsRatio&quot;, &quot;IntersectingGenes&quot; ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star &lt;- ifelse(melted_results$FisherPValue &lt; 0.05 &amp; melted_results$OddsRatio &gt; 1, &quot;*&quot;, &quot;&quot;)
+
+Enriched_diseases &lt;- melted_results[(melted_results$FisherPValue &lt; 0.05) &amp; (melted_results$OddsRatio &gt; 1) &amp; (melted_results$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;)), ]$Disease
+
+Disease_lists_GWAS &lt;- melted_results$Disease %&gt;% unique(
+  ) 
+
+
+melted_results_2 &lt;- melted_results
+melted_results_2 &lt;- melted_results_2[melted_results_2$Disease %in% Enriched_diseases, ]
+
+
+module_order &lt;- c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;, &quot;lightgreen&quot;,&quot;blue&quot;, &quot;magenta&quot;,&quot;darkred&quot;, &quot;brown&quot;, &quot;yellow&quot;, &quot;royalblue&quot;, &quot;grey&quot;)
+
+
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules &lt;- factor(melted_results_2$Modules, levels = module_order)
+
+melted_results_3 &lt;- melted_results_2[melted_results_2$Modules %in% c(&quot;green&quot;,&quot;darkgreen&quot;,&quot;midnightblue&quot;,&quot;salmon&quot;,&quot;lightyellow&quot;), ]
+
+
+
+melted_results_3_Traits_removed &lt;- melted_results_3[!melted_results_3$Disease %in% GWAS_Traits_to_remove, ]
+
+melted_results_4_Traits_removed &lt;- melted_results_3_Traits_removed %&gt;%
+  mutate(gene_count = sapply(strsplit(IntersectingGenes, &quot;;&quot;), length)) %&gt;%
+  filter(gene_count &gt;= 2)
+GWAS_clin_traits &lt;- melted_results_4_Traits_removed$Disease %&gt;% unique()
+
+
+melted_results_3_Traits_removed_plot &lt;- melted_results_3_Traits_removed[melted_results_3_Traits_removed$Disease %in%GWAS_clin_traits, ]
+
+
+ggplot(melted_results_3_Traits_removed_plot, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;violet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(-10, 1, 10)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.3, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_7.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># 
+Unique_clintrait_genes &lt;-
+  strsplit(melted_results_3_Traits_removed_plot$IntersectingGenes, &quot;;&quot;) %&gt;% unlist() %&gt;% unique()</code></pre>
+</div>
+<div id="fig-7-b" class="section level1">
+<h1>Fig-7-B</h1>
+<pre class="r"><code># Combining CVD diseases and traits together 
+melted_results_3_Traits_removed_plot$Disease %&gt;% unique()</code></pre>
+<pre><code> [1] &quot;Age-related disease endophenotypes&quot;                                           
+ [2] &quot;Age-related diseases, mortality and associated endophenotypes&quot;                
+ [3] &quot;Alkenylphosphatidylcholine (P-17:0/20:4) (b) levels&quot;                          
+ [4] &quot;Alkenylphosphatidylcholine (P-18:0/20:4) levels&quot;                              
+ [5] &quot;Alkenylphosphatidylcholine (P-18:0/22:5) levels&quot;                              
+ [6] &quot;Alkenylphosphatidylcholine (P-36:3) levels&quot;                                   
+ [7] &quot;Alkenylphosphatidylcholine (P-38:5) (a) levels&quot;                               
+ [8] &quot;Alkenylphosphatidylcholine (P-38:5) (b) levels&quot;                               
+ [9] &quot;Alkenylphosphatidylethanolamine (P-18:1/20:3) (a) levels&quot;                     
+[10] &quot;Alkenylphosphatidylethanolamine (P-18:1/20:3) (b) levels&quot;                     
+[11] &quot;Alkenylphosphatidylethanolamine (P-20:0/18:2) levels&quot;                         
+[12] &quot;Alkylphosphatidylcholine (O-38:5) levels&quot;                                     
+[13] &quot;Ascending aorta distensibility (MTAG)&quot;                                        
+[14] &quot;Asymmetrical dimethylarginine levels&quot;                                         
+[15] &quot;B-type natriuretic peptide to N-terminal pro B-type natriuretic peptide ratio&quot;
+[16] &quot;Ceramide (d19:1/20:0) levels&quot;                                                 
+[17] &quot;Ceramide (d19:1/26:0) levels&quot;                                                 
+[18] &quot;Frontal QRS-T angle&quot;                                                          
+[19] &quot;Heart rate response to beta blockers (atenolol monotherapy)&quot;                  
+[20] &quot;Heart rate response to recovery post exercise&quot;                                
+[21] &quot;Left ventricular global circumferential strain&quot;                               
+[22] &quot;Left ventricular mass to end-diastolic volume ratio&quot;                          
+[23] &quot;Myocardial fractal dimension (slice 2)&quot;                                       
+[24] &quot;QT interval (drug interaction)&quot;                                               
+[25] &quot;Radial peak diastolic strain rate&quot;                                            
+[26] &quot;Right ventricular ejection fraction&quot;                                          
+[27] &quot;Total Phosphatidylcholine levels&quot;                                             
+[28] &quot;Total Trihexosylcermide levels&quot;                                               </code></pre>
+<pre class="r"><code>melted_results_3_Traits_removed_plot_clean &lt;- melted_results_3_Traits_removed_plot[!melted_results_3_Traits_removed_plot$Disease %in% c(&quot;Age-related disease endophenotypes&quot;, &quot;Age-related diseases, mortality and associated endophenotypes&quot;), ]
+
+melted_results_3_Traits_removed_plot_clean$Disease %&gt;% unique()</code></pre>
+<pre><code> [1] &quot;Alkenylphosphatidylcholine (P-17:0/20:4) (b) levels&quot;                          
+ [2] &quot;Alkenylphosphatidylcholine (P-18:0/20:4) levels&quot;                              
+ [3] &quot;Alkenylphosphatidylcholine (P-18:0/22:5) levels&quot;                              
+ [4] &quot;Alkenylphosphatidylcholine (P-36:3) levels&quot;                                   
+ [5] &quot;Alkenylphosphatidylcholine (P-38:5) (a) levels&quot;                               
+ [6] &quot;Alkenylphosphatidylcholine (P-38:5) (b) levels&quot;                               
+ [7] &quot;Alkenylphosphatidylethanolamine (P-18:1/20:3) (a) levels&quot;                     
+ [8] &quot;Alkenylphosphatidylethanolamine (P-18:1/20:3) (b) levels&quot;                     
+ [9] &quot;Alkenylphosphatidylethanolamine (P-20:0/18:2) levels&quot;                         
+[10] &quot;Alkylphosphatidylcholine (O-38:5) levels&quot;                                     
+[11] &quot;Ascending aorta distensibility (MTAG)&quot;                                        
+[12] &quot;Asymmetrical dimethylarginine levels&quot;                                         
+[13] &quot;B-type natriuretic peptide to N-terminal pro B-type natriuretic peptide ratio&quot;
+[14] &quot;Ceramide (d19:1/20:0) levels&quot;                                                 
+[15] &quot;Ceramide (d19:1/26:0) levels&quot;                                                 
+[16] &quot;Frontal QRS-T angle&quot;                                                          
+[17] &quot;Heart rate response to beta blockers (atenolol monotherapy)&quot;                  
+[18] &quot;Heart rate response to recovery post exercise&quot;                                
+[19] &quot;Left ventricular global circumferential strain&quot;                               
+[20] &quot;Left ventricular mass to end-diastolic volume ratio&quot;                          
+[21] &quot;Myocardial fractal dimension (slice 2)&quot;                                       
+[22] &quot;QT interval (drug interaction)&quot;                                               
+[23] &quot;Radial peak diastolic strain rate&quot;                                            
+[24] &quot;Right ventricular ejection fraction&quot;                                          
+[25] &quot;Total Phosphatidylcholine levels&quot;                                             
+[26] &quot;Total Trihexosylcermide levels&quot;                                               </code></pre>
+<pre class="r"><code>melted_results_3_Traits_removed_plot %&gt;% dim()</code></pre>
+<pre><code>[1] 140   9</code></pre>
+<pre class="r"><code>melted_results_3_Traits_removed_plot_clean %&gt;% dim()</code></pre>
+<pre><code>[1] 130   9</code></pre>
+<pre class="r"><code>melted_results_3_Traits_removed_plot_clean$Type &lt;- c(&quot;trait&quot;)
+melted_results_3_CVD$Type &lt;- c(&quot;disease&quot;)
+
+TotalGWAS_DF &lt;- rbind(melted_results_3_CVD, melted_results_3_Traits_removed_plot_clean)
+
+TotalGWAS_DF$Type &lt;- factor(TotalGWAS_DF$Type, levels = c(&quot;trait&quot;,&quot;disease&quot; ) )
+
+
+ggplot(TotalGWAS_DF, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;violet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(-10, 1, 10)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.3, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_7.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Add Type column to each data frame
+melted_results_3_Traits_removed_plot_clean$Type &lt;- &quot;trait&quot;
+melted_results_3_CVD$Type &lt;- &quot;disease&quot;
+
+# Combine the data frames
+TotalGWAS_DF &lt;- rbind(melted_results_3_CVD, melted_results_3_Traits_removed_plot_clean)
+
+# Factor the Type column
+TotalGWAS_DF$Type &lt;- factor(TotalGWAS_DF$Type, levels = c(&quot;trait&quot;, &quot;disease&quot;))
+
+# Factor and order the Disease column based on Type
+TotalGWAS_DF &lt;- TotalGWAS_DF %&gt;%
+  mutate(Disease = factor(Disease, levels = rev(unique(Disease[order(Type)]))))
+
+# Plot the data
+ggplot(TotalGWAS_DF, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = &quot;black&quot;) +  
+  scale_fill_gradientn(colors = c(&quot;white&quot;, &quot;violet&quot;, &quot;red&quot;), 
+                       values = scales::rescale(c(-10, 1, 10)), 
+                       na.value = &quot;grey50&quot;, name = &quot;Odds ratio&quot;) +
+  geom_text(aes(label = Star), color = &quot;black&quot;, size = 4, na.rm = TRUE) +
+  labs(x = &quot;&quot;, y = &quot;&quot;) +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.3, &#39;cm&#39;),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )</code></pre>
+<p><img src="figure/Johnson_DOX_24_7.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.2.0 (2022-04-22)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur/Monterey 10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] grid      stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] scales_1.2.1                           
+ [2] ReactomePA_1.40.0                      
+ [3] impute_1.70.0                          
+ [4] WGCNA_1.72-1                           
+ [5] fastcluster_1.2.3                      
+ [6] dynamicTreeCut_1.63-1                  
+ [7] BioNERO_1.4.2                          
+ [8] reshape2_1.4.4                         
+ [9] ggridges_0.5.4                         
+[10] biomaRt_2.52.0                         
+[11] ggvenn_0.1.10                          
+[12] UpSetR_1.4.0                           
+[13] DOSE_3.22.1                            
+[14] variancePartition_1.26.0               
+[15] clusterProfiler_4.4.4                  
+[16] pheatmap_1.0.12                        
+[17] qvalue_2.28.0                          
+[18] Homo.sapiens_1.3.1                     
+[19] TxDb.Hsapiens.UCSC.hg19.knownGene_3.2.2
+[20] org.Hs.eg.db_3.15.0                    
+[21] GO.db_3.15.0                           
+[22] OrganismDbi_1.38.1                     
+[23] GenomicFeatures_1.48.4                 
+[24] AnnotationDbi_1.58.0                   
+[25] cluster_2.1.4                          
+[26] ggfortify_0.4.16                       
+[27] lubridate_1.9.2                        
+[28] forcats_1.0.0                          
+[29] stringr_1.5.0                          
+[30] dplyr_1.1.2                            
+[31] purrr_1.0.2                            
+[32] readr_2.1.4                            
+[33] tidyr_1.3.0                            
+[34] tibble_3.2.1                           
+[35] ggplot2_3.4.3                          
+[36] tidyverse_2.0.0                        
+[37] RColorBrewer_1.1-3                     
+[38] RUVSeq_1.30.0                          
+[39] edgeR_3.38.4                           
+[40] limma_3.52.4                           
+[41] EDASeq_2.30.0                          
+[42] ShortRead_1.54.0                       
+[43] GenomicAlignments_1.32.1               
+[44] SummarizedExperiment_1.26.1            
+[45] MatrixGenerics_1.8.1                   
+[46] matrixStats_1.0.0                      
+[47] Rsamtools_2.12.0                       
+[48] GenomicRanges_1.48.0                   
+[49] Biostrings_2.64.1                      
+[50] GenomeInfoDb_1.32.4                    
+[51] XVector_0.36.0                         
+[52] IRanges_2.30.1                         
+[53] S4Vectors_0.34.0                       
+[54] BiocParallel_1.30.4                    
+[55] Biobase_2.56.0                         
+[56] BiocGenerics_0.42.0                    
+[57] workflowr_1.7.1                        
+
+loaded via a namespace (and not attached):
+  [1] rappdirs_0.3.3         rtracklayer_1.56.1     minet_3.54.0          
+  [4] R.methodsS3_1.8.2      coda_0.19-4            bit64_4.0.5           
+  [7] knitr_1.43             aroma.light_3.26.0     DelayedArray_0.22.0   
+ [10] R.utils_2.12.2         rpart_4.1.19           data.table_1.14.8     
+ [13] hwriter_1.3.2.1        KEGGREST_1.36.3        RCurl_1.98-1.12       
+ [16] doParallel_1.0.17      generics_0.1.3         preprocessCore_1.58.0 
+ [19] callr_3.7.3            RhpcBLASctl_0.23-42    RSQLite_2.3.1         
+ [22] shadowtext_0.1.2       bit_4.0.5              tzdb_0.4.0            
+ [25] enrichplot_1.16.2      xml2_1.3.5             httpuv_1.6.11         
+ [28] viridis_0.6.4          xfun_0.40              hms_1.1.3             
+ [31] jquerylib_0.1.4        evaluate_0.21          promises_1.2.1        
+ [34] fansi_1.0.4            restfulr_0.0.15        progress_1.2.2        
+ [37] caTools_1.18.2         dbplyr_2.3.3           htmlwidgets_1.6.2     
+ [40] igraph_1.5.1           DBI_1.1.3              ggnewscale_0.4.9      
+ [43] backports_1.4.1        annotate_1.74.0        aod_1.3.2             
+ [46] deldir_1.0-9           vctrs_0.6.3            abind_1.4-5           
+ [49] cachem_1.0.8           withr_2.5.0            ggforce_0.4.1         
+ [52] vroom_1.6.3            checkmate_2.2.0        treeio_1.20.2         
+ [55] prettyunits_1.1.1      ape_5.7-1              lazyeval_0.2.2        
+ [58] crayon_1.5.2           genefilter_1.78.0      labeling_0.4.2        
+ [61] pkgconfig_2.0.3        tweenr_2.0.2           nlme_3.1-163          
+ [64] nnet_7.3-19            rlang_1.1.1            lifecycle_1.0.3       
+ [67] downloader_0.4         filelock_1.0.2         BiocFileCache_2.4.0   
+ [70] rprojroot_2.0.3        polyclip_1.10-4        graph_1.74.0          
+ [73] Matrix_1.5-4.1         aplot_0.2.0            NetRep_1.2.7          
+ [76] boot_1.3-28.1          base64enc_0.1-3        GlobalOptions_0.1.2   
+ [79] whisker_0.4.1          processx_3.8.2         png_0.1-8             
+ [82] viridisLite_0.4.2      rjson_0.2.21           bitops_1.0-7          
+ [85] getPass_0.2-2          R.oo_1.25.0            ggnetwork_0.5.12      
+ [88] KernSmooth_2.23-22     blob_1.2.4             shape_1.4.6           
+ [91] jpeg_0.1-10            gridGraphics_0.5-1     reactome.db_1.81.0    
+ [94] graphite_1.42.0        memoise_2.0.1          magrittr_2.0.3        
+ [97] plyr_1.8.8             gplots_3.1.3           zlibbioc_1.42.0       
+[100] compiler_4.2.0         scatterpie_0.2.1       BiocIO_1.6.0          
+[103] clue_0.3-64            intergraph_2.0-3       lme4_1.1-34           
+[106] cli_3.6.1              patchwork_1.1.3        ps_1.7.5              
+[109] htmlTable_2.4.1        Formula_1.2-5          mgcv_1.9-0            
+[112] MASS_7.3-60            tidyselect_1.2.0       stringi_1.7.12        
+[115] highr_0.10             yaml_2.3.7             GOSemSim_2.22.0       
+[118] locfit_1.5-9.8         latticeExtra_0.6-30    ggrepel_0.9.3         
+[121] sass_0.4.7             fastmatch_1.1-4        tools_4.2.0           
+[124] timechange_0.2.0       parallel_4.2.0         circlize_0.4.15       
+[127] rstudioapi_0.15.0      foreign_0.8-84         foreach_1.5.2         
+[130] git2r_0.32.0           gridExtra_2.3          farver_2.1.1          
+[133] ggraph_2.1.0           digest_0.6.33          BiocManager_1.30.22   
+[136] networkD3_0.4          Rcpp_1.0.11            broom_1.0.5           
+[139] later_1.3.1            httr_1.4.7             ComplexHeatmap_2.12.1 
+[142] GENIE3_1.18.0          Rdpack_2.5             colorspace_2.1-0      
+[145] XML_3.99-0.14          fs_1.6.3               splines_4.2.0         
+[148] statmod_1.5.0          yulab.utils_0.0.8      RBGL_1.72.0           
+[151] tidytree_0.4.5         graphlayouts_1.0.0     ggplotify_0.1.2       
+[154] xtable_1.8-4           jsonlite_1.8.7         nloptr_2.0.3          
+[157] ggtree_3.4.4           tidygraph_1.2.3        ggfun_0.1.2           
+[160] R6_2.5.1               Hmisc_5.1-0            pillar_1.9.0          
+[163] htmltools_0.5.6        glue_1.6.2             fastmap_1.1.1         
+[166] minqa_1.2.5            codetools_0.2-19       fgsea_1.22.0          
+[169] utf8_1.2.3             sva_3.44.0             lattice_0.21-8        
+[172] bslib_0.5.1            network_1.18.1         pbkrtest_0.5.2        
+[175] curl_5.0.2             gtools_3.9.4           interp_1.1-4          
+[178] survival_3.5-7         statnet.common_4.9.0   rmarkdown_2.24        
+[181] munsell_0.5.0          GetoptLong_1.0.5       DO.db_2.9             
+[184] GenomeInfoDbData_1.2.8 iterators_1.0.14       gtable_0.3.4          
+[187] rbibutils_2.2.15      </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
