@@ -8,4 +8,33 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+Research website for the project "DNA damage-associated protein co-expression networks in cardiomyocytes provide insight into tolerance to genetic variation and cardiovascular disease" 
+
+
+# Figures & additional analyses
+[Figure 1: DOX-treated iPSC-CMs cluster by treatment and most closely resemble the heart ventricle proteome. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_1.html)
+
+
+[Figure 2: Network analysis of the iPSC-CM proteome identifies protein co-expression modules correlated with DOX treatment. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_2.html)
+
+
+[Figure 3: Network modules display heterogeneity for cellular localization and tissue specificity. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_3.html)
+
+
+[Figure 4: DOX-correlated module proteins are enriched for distinct functions.](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_4.html)
+
+
+[Figure 5: DOX-correlated hub proteins are depleted for protein quantitative trait loci.](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_5.html)
+
+
+[Figure 6: DOX-correlated hub proteins are enriched for loss-of-function intolerant proteins.](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_6.html)
+
+
+[Figure 7: DOX-correlated modules are enriched for proteins mapped to cardiovascular traits and diseases. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_7.html)
+
+
+[Figure 8: DOX-correlated hub proteins are enriched for physical protein interactors of CVD risk proteins. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_8.html)
+
+
+[Data preprocessing and differential abundance testing  ](https://omar-johnson.github.io/DOX_24_Github/analysis/Johnson_DOX_24_RUV_Limma.html)
+
