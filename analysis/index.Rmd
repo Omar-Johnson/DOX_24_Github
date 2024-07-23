@@ -36,5 +36,5 @@ Research website for the project "DNA damage-associated protein co-expression ne
 [Figure 8: DOX-correlated hub proteins are enriched for physical protein interactors of CVD risk proteins. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_8.html)
 
 
-[Data preprocessing and differential abundance testing  ](https://omar-johnson.github.io/DOX_24_Github/analysis/Johnson_DOX_24_RUV_Limma.html)
+[Data preprocessing and differential abundance testing  ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_RUV_Limma.html)
 
