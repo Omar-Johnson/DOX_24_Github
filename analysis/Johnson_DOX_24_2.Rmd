@@ -1,0 +1,589 @@
+---
+title: "Johnson_DOX_24_2"
+author: "Omar Johnson"
+date: "2024-07-16"
+output: html_document
+---
+
+
+# Load Libraries 
+```{r Libraries, include=FALSE}
+library(EDASeq)
+library(RUVSeq)
+library(RColorBrewer)
+library(edgeR)
+library(limma)
+library(Biobase)
+library(SummarizedExperiment)
+library(tidyverse) 
+library(ggfortify)
+library(cluster)
+library(edgeR)
+library(limma)
+library(Homo.sapiens)
+library(BiocParallel)
+library(qvalue)
+library(pheatmap)
+library(clusterProfiler)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(RColorBrewer)
+library(variancePartition)
+library(DOSE)
+library(UpSetR)
+library(ggvenn)
+library(biomaRt)
+library(ggridges)
+library(reshape2)
+library(BioNERO)
+library(WGCNA)
+library(impute)
+library(dynamicTreeCut)
+library(ReactomePA)
+library(igraph)
+library(ggraph)
+```
+
+
+# Read in Data 
+```{r Read in data, include=FALSE}
+
+# 1. RUVg Corrected data across all 10 samples that has been log2 transformed. It has not yet been quantile normalized. 
+ RUVg_Log2_quantnormalized_all10samples <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/RUVIII_10samples_log2_notquantilenormalized.csv", header = TRUE, row.names = 1)
+RUVg_Log2_quantnormalized_all10samples <- RUVg_Log2_quantnormalized_all10samples^2
+ 
+
+# 2. Toptable correspondding to the Diff.Abundance test from #1 
+toptable_summary <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/Toptable_summary_RUVIII.csv", header = TRUE, row.names = 1)
+
+
+# 3. Meta data for all 10 samples in our study. 
+Meta <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/Meta.csv", header = TRUE, row.names = 1)
+
+
+
+Toptable_Modules <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/SUPP_Table_2.csv", header = TRUE)
+
+
+New_RNA_PRO_DF_2 <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/New_RNA_PRO_DF.csv", header = TRUE, row.names = 1)
+
+
+New_RNA_PRO_DF_3 <- merge(Toptable_Modules, New_RNA_PRO_DF_2, by.x = "Proteins", by.y = "uniprotswissprot")
+
+
+hubs <- read.csv( file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/hubs.csv", header = TRUE)
+
+```
+
+
+# Generate and view initial objects
+```{r Create summarized experiment object}
+# Undo log tranformation
+RUVg_Log2_quantnormalized_all10samples %>% head()
+RUVg_Log2_quantnormalized_all10samples %>% dim()
+
+
+# Create summarized experiment object 
+WGCNA_DF <- SummarizedExperiment(assays = as.matrix(RUVg_Log2_quantnormalized_all10samples))
+dim(RUVg_Log2_quantnormalized_all10samples) 
+exp_filt <- filter_by_variance(WGCNA_DF, n = 4178)
+exp_filt %>% assay() %>% head()
+
+
+toptable_summary %>% head()
+Meta
+```
+
+
+# S3-A&B-SFT power threshold  
+```{r SFT power threshold  }
+# Determine the soft power threshold to get scale free shape
+sft <- SFT_fit(exp_filt, net_type = "signed", rsquared = 0.7,  cor_method = "pearson")
+sft$plot
+```
+
+
+# Modify workflow to construct a simpler network  
+```{r  Modify workflow to have a simpler network}
+
+exp2gcn2_EDIT <- function (exp, net_type = "signed", module_merging_threshold = 0.8, 
+          SFTpower = NULL, cor_method = "spearman", verbose = FALSE) 
+{
+  params <- list(net_type = net_type, module_merging_threshold = module_merging_threshold, 
+                 SFTpower = SFTpower, cor_method = cor_method)
+  norm.exp <- BioNERO:::handleSE(exp)
+  if (is.null(SFTpower)) {
+    stop("Please, specify the SFT power.")
+  }
+  if (verbose) {
+    message("Calculating adjacency matrix...")
+  }
+  cor_matrix <- BioNERO:::calculate_cor_adj(cor_method, norm.exp, SFTpower, 
+                                  net_type)$cor
+  adj_matrix <- BioNERO:::calculate_cor_adj(cor_method, norm.exp, SFTpower, 
+                                  net_type)$adj
+  gene_ids <- rownames(adj_matrix)
+  adj_matrix <- matrix(adj_matrix, nrow = nrow(adj_matrix))
+  rownames(adj_matrix) <- gene_ids
+  colnames(adj_matrix) <- gene_ids
+  if (verbose) {
+    message("Calculating topological overlap matrix (TOM)...")
+  }
+  tomtype <- BioNERO:::get_TOMtype(net_type)
+  TOM <- WGCNA::TOMsimilarity(adj_matrix, TOMType = tomtype)
+  dissTOM <- 1 - TOM
+  geneTree <- hclust(as.dist(dissTOM), method = "average")
+  if (verbose) {
+    message("Detecting coexpression modules...")
+  }
+  old.module_labels <- dynamicTreeCut::cutreeDynamicTree(dendro = geneTree, maxTreeHeight = 3 , 
+                                                         minModuleSize = 40, deepSplit = FALSE)
+  nmod <- length(unique(old.module_labels))
+  palette <- rev(WGCNA::standardColors(nmod))
+  old.module_colors <- WGCNA::labels2colors(old.module_labels, 
+                                            colorSeq = palette)
+  if (verbose) {
+    message("Calculating module eigengenes (MEs)...")
+  }
+  old.MElist <- WGCNA::moduleEigengenes(t(norm.exp), colors = old.module_colors, 
+                                        softPower = SFTpower)
+  old.MEs <- old.MElist$eigengenes
+  MEDiss1 <- 1 - cor(old.MEs)
+  old.METree <- hclust(as.dist(MEDiss1), method = "average")
+  MEDissThreshold <- 1 - module_merging_threshold
+  if (verbose) {
+    message("Merging similar modules...")
+  }
+  if (cor_method == "pearson") {
+    merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors, 
+                                       cutHeight = MEDissThreshold, verbose = 0, colorSeq = palette)
+  }
+  else if (cor_method == "spearman") {
+    merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors, 
+                                       cutHeight = MEDissThreshold, verbose = 0, corOptions = list(use = "p", 
+                                                                                                   method = "spearman"), colorSeq = palette)
+  }
+  else if (cor_method == "biweight") {
+    merge1 <- WGCNA::mergeCloseModules(t(norm.exp), old.module_colors, 
+                                       cutHeight = MEDissThreshold, verbose = 0, corFnc = bicor, 
+                                       colorSeq = palette)
+  }
+  else {
+    stop("Please, specify a correlation method. One of 'spearman', 'pearson' or 'biweight'.")
+  }
+  new.module_colors <- merge1$colors
+  new.MEs <- merge1$newMEs
+  new.METree <- hclust(as.dist(1 - cor(new.MEs)), method = "average")
+  genes_and_modules <- as.data.frame(cbind(gene_ids, new.module_colors))
+  colnames(genes_and_modules) <- c("Genes", "Modules")
+  if (verbose) {
+    message("Calculating intramodular connectivity...")
+  }
+  kwithin <- WGCNA::intramodularConnectivity(adj_matrix, new.module_colors)
+  result.list <- list(adjacency_matrix = adj_matrix, MEs = new.MEs, 
+                      genes_and_modules = genes_and_modules, kIN = kwithin, 
+                      correlation_matrix = cor_matrix, params = params, dendro_plot_objects = list(tree = geneTree, 
+                                                                                                   unmerged = old.module_colors))
+  return(result.list)
+}
+```
+
+
+# Fig S3-C,D 
+```{r Generate network with max merge threshold }
+net <- exp2gcn2_EDIT(
+  exp_filt, net_type = "signed", module_merging_threshold = 0.9999, SFTpower = 20, 
+  cor_method = "pearson")
+
+# Eigengene networks
+WGCNA::plotEigengeneNetworks(net$MEs, "", marDendro = c(3, 5, 2, 6), plotHeatmaps = FALSE)
+
+
+WGCNA::plotEigengeneNetworks(net$MEs, "", marHeatmap = c(3, 4, 2, 2), plotDendrograms = FALSE)
+
+
+# Genes per module 
+plot_ngenes_per_module(net)
+```
+
+
+# Figure-2-A & Fig S3-E Weighted protein co-expression network
+```{r Generate network with desired merge threshold}
+
+net <- exp2gcn2_EDIT(
+  exp_filt, net_type = "signed", module_merging_threshold = 0.85, SFTpower = 20, 
+  cor_method = "pearson")
+
+
+# Dendogram
+plot_dendro_and_colors(net )
+
+
+# Eigengene networks
+WGCNA::plotEigengeneNetworks(net$MEs, "", marDendro = c(3, 5, 2, 6), plotHeatmaps = FALSE, excludeGrey = TRUE)
+
+
+WGCNA::plotEigengeneNetworks(net$MEs, "", marHeatmap = c(3, 4, 2, 2), plotDendrograms = FALSE)
+
+# Genes per module 
+plot_ngenes_per_module(net)
+```
+
+
+# Fig-2-A-Define trait and get eigen proteins
+```{r Define trat and get eigen proteins, fig.width = 8, fig.height = 3}
+
+Meta
+
+WGCNA_DF$trait <- c(1,1,1,1,1,0,0,0,0,0)
+names(WGCNA_DF$trait) <- c("S1", "S3", "S5", "S7", "S9", "S2", "S4", "S6", "S8", "S10")
+
+
+eigenmatrix <- net$MEs %>% as.matrix()
+eigenmatrix
+
+correlationResults <- cor(eigenmatrix, WGCNA_DF$trait, method= "pearson")
+
+pvalues <- sapply(1:ncol(eigenmatrix), function(column) cor.test(eigenmatrix[,column], WGCNA_DF$trait)$p.value )
+
+WGCNA_DF$trait <- as.matrix(WGCNA_DF$trait)
+
+Modeigen <- as.matrix(net$MEs)
+
+
+# Trait data frame
+trait_data <- data.frame(
+  ME = correlationResults %>% rownames(),
+  Value = correlationResults[,1],
+  PValue = pvalues
+)
+
+
+trait_data
+
+Drug_trait_results <- trait_data
+
+
+
+WGCNA_DF$trait <- c(1,2,3,3,3,1,2,3,3,3)
+names(WGCNA_DF$trait) <- c("S1", "S3", "S5", "S7", "S9", "S2", "S4", "S6", "S8", "S10")
+
+
+eigenmatrix <- net$MEs %>% as.matrix()
+
+
+
+correlationResults <- cor(eigenmatrix, WGCNA_DF$trait, method="pearson")
+
+pvalues <- sapply(1:ncol(eigenmatrix), function(column) cor.test(eigenmatrix[,column], WGCNA_DF$trait)$p.value )
+
+WGCNA_DF$trait <- as.matrix(WGCNA_DF$trait)
+
+Modeigen <- as.matrix(net$MEs)
+
+
+
+# Trait data frame
+trait_data <- data.frame(
+  ME = correlationResults %>% rownames(),
+  Value = correlationResults[,1],
+  PValue = pvalues
+)
+trait_data$neglogP <- -log(trait_data$PValue)
+trait_data
+        
+
+# Get modules that significantly associate with DOX treatment 
+Signifigant_modules <-  trait_data[trait_data$PValue < 0.01, ]$ME
+
+
+# Get your genes/proteins and modules DF 
+Gene_mod_DF <- net$genes_and_modules 
+
+
+Drug_trait_results_sub <- Drug_trait_results[,c(1,2,3)]
+colnames(Drug_trait_results_sub) <- c("Module", "cor", "pval")
+Drug_trait_results_sub$Trait <- "DOX"
+Drug_trait_results_sub
+
+
+
+Ind_trait_sub <- trait_data[,c(1,2,3)]
+colnames(Ind_trait_sub) <- c("Module","cor", "pval")
+Ind_trait_sub$Trait <- "IND."
+
+Fulltrait_df <- rbind(Drug_trait_results_sub,Ind_trait_sub)
+Fulltrait_df
+
+
+Fulltrait_df$annotation <- ifelse(Fulltrait_df$pval < 0.01, "*", "")
+module_order <- c("MEbrown", "MEdarkred", "MEmagenta", "MElightgreen", "MEblue",      "MEgreen","MElightyellow","MEsalmon","MEyellow","MEroyalblue","MEdarkgreen", "MEmidnightblue", "MEgrey")  
+
+# Factor the Module column in Fulltrait_df
+Fulltrait_df$Module <- factor(Fulltrait_df$Module, levels = module_order)
+
+ggplot(Fulltrait_df, aes(x = Module, y = Trait, fill = cor)) +
+  geom_tile() +
+  # First geom_text for annotations
+  geom_text(aes(label = annotation), color = "black", size = 10) +
+  # Second geom_text for correlation values
+  geom_text(aes(label = sprintf("%.2f", cor)), color = "black", size = 4, vjust = .8) +
+  scale_fill_gradient2(
+    low = "blue", 
+    high = "red", 
+    mid = "white", 
+    midpoint = 0, 
+    name = "Correlation",
+    limits = c(-1, 1)  # Set the limits for the color scale
+  ) +
+  labs(x = "Trait", y = "Module") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+# Figure-2-B - Pairwise differential abundance of proteins
+```{r Volcano}
+
+# Get your genes/proteins and modules DF 
+Gene_mod_DF <- net$genes_and_modules 
+
+# Module data gets merged with toptable
+toptable_summary %>% head()
+
+Toptable_Modules <- merge(toptable_summary, 
+                          Gene_mod_DF, by.x = "Protein", by.y = "Genes")
+
+# Create the volcano plot
+ggplot(Toptable_Modules)+
+  geom_point(mapping = aes(x = logFC, y = -log10(P.Value), color = threshold_P))+
+  xlab("log2FC")+
+  ylab("-log10 nominal p-value")+
+  ylim(0, 7)+
+  xlim(-3.5, 3.5)+
+  theme(legend.position = "none", 
+        plot.title = element_text(size = rel(1.5), hjust = 0.5),
+        axis.title = element_text(size = rel(1.25)))+
+  theme_classic()
+```
+
+
+# Figure-2-C Module composition for differentilly abundant proteins
+```{r DE across modules 1}
+# Plotting LogFC between DE and non DE proteins 
+Toptable_Modules$DE_or_Not <- Toptable_Modules$P.Value < 0.05
+
+
+# Calculate percentage of DE genes for each module
+DE_Mod_result <- Toptable_Modules %>%
+  group_by(Modules) %>%
+  summarize(
+    total_genes = n(),
+    DE_genes = sum(P.Value < 0.05),
+    percent_DE = (DE_genes / total_genes) * 100
+  )
+
+
+print(DE_Mod_result)
+
+DE_Mod_result[DE_Mod_result$Modules %in% c("green","darkgreen", "midnightblue", "lightyellow", "salmon"), ]$percent_DE %>% range()
+
+
+DE_Mod_result[!(DE_Mod_result$Modules %in% c("green","darkgreen", "midnightblue", "lightyellow", "salmon")), ]$percent_DE %>% range()
+
+# Plot
+ggplot(DE_Mod_result, aes(x = Modules, y = percent_DE)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Module",
+    y = "Percentage of DE genes",
+    title = "Percentage of DE genes in each module",
+    fill = "Module"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+# Compute complementary percentage for non-DE genes
+DE_Mod_result$percent_nonDE <- 100 - DE_Mod_result$percent_DE
+
+# Reshape data to long format
+long_data <- DE_Mod_result %>% 
+  pivot_longer(cols = c(percent_DE, percent_nonDE), 
+               names_to = "type", 
+               values_to = "percentage")
+
+module_order <- c("green","darkgreen","midnightblue","salmon", "lightyellow", "lightgreen", "blue","magenta", "darkred","brown", "yellow","royalblue", "grey")  
+
+
+
+# Factor the Module column in Fulltrait_df
+long_data$Modules <- factor(long_data$Modules, levels = module_order)
+
+# Plot stacked bar chart
+ggplot(long_data, aes(x = Modules, y = percentage, fill = type)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "Module",
+    y = "Percentage",
+    title = "Percentage of DE and non-DE genes in each module",
+    fill = "Type"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  scale_y_continuous(breaks = rev(seq(0, 100, by = 10)))
+
+```
+
+
+# Figure-2-D DOX-response effect size
+```{r Ridge 1}
+
+Toptable_Modules_DOXcorset <- Toptable_Modules[Toptable_Modules$Modules %in% c("green", "lightyellow" , "salmon", "darkgreen" ,"midnightblue"), ]
+
+
+
+# Density 
+ggplot(Toptable_Modules_DOXcorset, aes(x = logFC, fill = Modules)) +
+  geom_density(alpha = 0.9) + 
+  labs(title = "Distribution of logFC Values in DOX correlated modules",
+       x = "logFC",
+       y = "Density") +
+  theme_minimal() +
+  theme(legend.position = "right")+
+  xlim(-2,2)+
+  ylim(0, 4.5)+
+  scale_fill_identity(guide = "legend")
+
+
+
+
+
+Toptable_Modules_DOXcorset_SAYANversion <- Toptable_Modules_DOXcorset
+
+
+Toptable_Modules_DOXcorset_SAYANversion$Modules[Toptable_Modules_DOXcorset_SAYANversion$Modules == "lightyellow"] <- "goldenrod" 
+
+
+# Full graph 
+module_order <- c("green","darkgreen","midnightblue", "salmon","goldenrod")
+
+# Factor the Module column in Fulltrait_df
+Toptable_Modules_DOXcorset_SAYANversion$Modules <- factor(Toptable_Modules_DOXcorset_SAYANversion$Modules, levels = rev(module_order))
+
+
+
+# Density 
+ggplot(Toptable_Modules_DOXcorset_SAYANversion, aes(x = logFC, fill = Modules)) +
+  geom_density(alpha = 0.9) + 
+  labs(title = "Distribution of logFC Values in DOX correlated modules",
+       x = "logFC",
+       y = "Density") +
+  theme_classic() +
+  theme(legend.position = "right")+
+  xlim(-2,2)+
+  ylim(0, 4)+
+  scale_fill_identity(guide = "legend")
+
+
+
+Toptable_Modules_NonDOXcorset <- Toptable_Modules[Toptable_Modules$Modules %in% c("darkred", "royalblue" ,"lightgreen", "magenta", "blue" ,"brown", "yellow"), ]
+
+
+# Density
+ggplot(Toptable_Modules_NonDOXcorset, aes(x = logFC, fill = Modules)) +
+  geom_density(alpha = 0.9 ) + 
+  labs(title = "Distribution of logFC Values in modules not correlaated to DOX",
+       x = "logFC",
+       y = "Density") +
+  theme_minimal() +
+  theme(legend.position = "right")+
+  xlim(-2,2)+
+  ylim(0, 4.5)+
+  scale_fill_identity(guide = "legend")
+
+
+```
+
+
+# Figure-2-E Hub protein expresssion examples 
+```{r Ridge 2}
+boxplot(as.matrix(log2(RUVg_Log2_quantnormalized_all10samples))["Q96GQ7",] ~ Meta$Cond, data=Meta, main="DDX27",
+        ylab="Log2 Abundance", xlab="", col = c("green","green"), ylim = c(8,9))
+
+
+boxplot(as.matrix(log2(RUVg_Log2_quantnormalized_all10samples))["Q9BRB3",] ~ Meta$Cond, data=Meta, main="PIGQ",
+        ylab="Log2 Abundance", xlab="", col = c("yellow","yellow"),  ylim = c(8,9))
+
+```
+
+
+# Figure-2-F-Hub protein co-expression network 
+```{r 2F}
+#### Version1####
+hubs_traitcorr <- hubs[hubs$Module %in% c( "darkgreen", "green" , "lightyellow",  "midnightblue", "salmon"), ]
+
+hubs_traitcorr_toptable <-  merge(hubs_traitcorr, Toptable_Modules, by.x="Gene" , by.y= "Protein")
+
+
+My_edge_list <- BioNERO::get_edge_list(net)
+
+# Get a data frame of DOX corr. hubs connecting all to all 
+My_edge_list_hubs <- My_edge_list %>%
+  filter(Gene1 %in% hubs_traitcorr$Gene & Gene2 %in% hubs_traitcorr$Gene)
+# looks like it is too big for plotting try something else 
+
+
+
+# Create a helper dataframe with Gene and Module from hubs_traitcorr
+helper_df <- hubs_traitcorr %>% dplyr::select(Gene, Module)
+
+# Now, subset My_edge_list based on the conditions
+My_edge_list_hubs_same_module <- My_edge_list_hubs %>%
+  dplyr::filter(
+    Gene1 %in% helper_df$Gene & 
+    Gene2 %in% helper_df$Gene
+  ) %>%
+  dplyr::filter(
+    helper_df$Module[match(Gene1, helper_df$Gene)] == 
+    helper_df$Module[match(Gene2, helper_df$Gene)]
+  )
+
+My_edge_list_hubs_same_module %>% head()
+My_edge_list_hubs_same_module_filt <- My_edge_list_hubs_same_module[My_edge_list_hubs_same_module$Weight > 0.9, ] 
+
+
+
+#### Version 2 fully connected #### 
+# Create an igraph graph object
+
+graph_network <- graph_from_data_frame(d = My_edge_list_hubs[My_edge_list_hubs$Weight > 0.9, ], directed = FALSE)
+
+# Prepare the node attribute data frame with gene and module information
+node_attributes <- dplyr::select(hubs_traitcorr, Gene, Module) %>% unique()
+
+# Add the module information to the graph
+V(graph_network)$Module <- node_attributes$Module[match(names(V(graph_network)), node_attributes$Gene)]
+
+
+ggraph(graph_network, layout = "stress") +
+  geom_edge_link(aes(edge_color = Weight), show.legend = TRUE) +
+  geom_node_point(aes(color = Module), stroke = 0.5) +  # Color nodes by module
+  geom_node_text(aes(label = name), repel = TRUE, size = 2) +
+  scale_edge_color_continuous(low = "lightgrey", high = "black", limits = c(0.9, 1)) +  # Scale edge color by weight
+  scale_color_manual(values = unique(hubs_traitcorr$Module)) +  # Set colors for each module
+  theme_graph() +
+  labs(color = "Module")
+
+ggraph(graph_network, layout = "stress") +
+  geom_edge_link(aes(edge_color = Weight, alpha = Weight), show.legend = TRUE) +  # Edge color and alpha by Weight
+  geom_node_point(aes(color = Module), size = 2) +  # Color nodes by module, adjust node size
+  geom_node_text(aes(label = name), repel = TRUE, size = 2) +  # Adjust text size
+  scale_edge_color_continuous(low = "white", high = "black", limits = c(0.9, 1)) +  # Scale edge color by weight
+  scale_color_manual(values = unique(hubs_traitcorr$Module)) +  # Set colors for each module
+  theme_graph() +
+  labs(color = "Module")
+
+
+
+```

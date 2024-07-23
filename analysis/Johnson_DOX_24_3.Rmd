@@ -1,0 +1,773 @@
+---
+title: "Johnson_DOX_24_3"
+author: "Omar Johnson"
+date: "2024-07-18"
+output: html_document
+---
+
+# Load Libraries 
+```{r Libraries, include=FALSE}
+library(EDASeq)
+library(RUVSeq)
+library(RColorBrewer)
+library(edgeR)
+library(limma)
+library(Biobase)
+library(SummarizedExperiment)
+library(tidyverse) 
+library(ggfortify)
+library(cluster)
+library(edgeR)
+library(limma)
+library(Homo.sapiens)
+library(BiocParallel)
+library(qvalue)
+library(pheatmap)
+library(clusterProfiler)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(RColorBrewer)
+library(variancePartition)
+library(DOSE)
+library(UpSetR)
+library(ggvenn)
+library(biomaRt)
+library(ggridges)
+library(reshape2)
+library(BioNERO)
+library(WGCNA)
+library(impute)
+library(dynamicTreeCut)
+library(ReactomePA)
+library(igraph)
+library(ggraph)
+library(scales)
+library(networkD3)
+library(circlize)
+```
+
+# Read in Data 
+```{r Read in data, include=FALSE}
+
+# 1. RUVg Corrected data across all 10 samples that has been log2 transformed. It has not yet been quantile normalized. 
+ RUVg_Log2_quantnormalized_all10samples <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/RUVIII_10samples_log2_notquantilenormalized.csv", header = TRUE, row.names = 1)
+RUVg_Log2_quantnormalized_all10samples <- RUVg_Log2_quantnormalized_all10samples^2
+ 
+
+# 2. Toptable correspondding to the Diff.Abundance test from #1 
+toptable_summary <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/Toptable_summary_RUVIII.csv", header = TRUE, row.names = 1)
+
+
+# 3. Meta data for all 10 samples in our study. 
+Meta <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/Meta.csv", header = TRUE, row.names = 1)
+
+
+
+Toptable_Modules <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/SUPP_Table_2.csv", header = TRUE)
+
+
+New_RNA_PRO_DF_2 <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Data_Frames/DIA_proteins/RUVIII_Imputed/New_RNA_PRO_DF.csv", header = TRUE, row.names = 1)
+
+
+New_RNA_PRO_DF_3 <- merge(Toptable_Modules, New_RNA_PRO_DF_2, by.x = "Proteins", by.y = "uniprotswissprot")
+
+
+hubs <- read.csv( file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/hubs.csv", header = TRUE)
+
+Tissue_spec <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/DIA_Framework/Tissue_specific.csv", header = TRUE)
+
+# Load tissue specificity data
+Tissue_spec_2 <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Tissue_spec/Tissue_spec.csv", header = TRUE)
+
+
+SP_TM <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/DIA_Framework/Signaling_Transmembrane_peptides.csv", header = TRUE)
+SP <- SP_TM[, c(4,5)]
+TM <- SP_TM[, c(4,6)]
+SP <- SP[SP$SP..number.of.positive.prediction.methods. > 1, ]
+SP %>% dim()
+
+
+# Set the path to the folder containing your .csv files
+folder_path <- "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Protein_types" 
+
+# Get the list of .csv files
+file_names <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Read each file and extract the 'Uniprot' column
+HPA_General <- lapply(file_names, function(file) {
+  data <- read.csv(file, header = TRUE) 
+  return(data$Uniprot) 
+})
+
+# Name the list elements with filenames (without the full path and extension)
+names(HPA_General) <- sapply(strsplit(basename(file_names), "\\."), `[`, 1)
+
+HPA_General %>% names()
+HPA_General2 <- HPA_General[(HPA_General %>% names()) %in% c( "Intracellular", "Membrane", "Plasma", "Secreted") ]
+
+
+
+
+
+
+
+
+
+
+Autophagosome_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Autophagosome.csv" , header = TRUE)
+Autophagosome_comp<-Autophagosome_comp$From
+
+Cell_Membrane_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Cell_Membrane.csv" , header = TRUE)
+Cell_Membrane_comp <- Cell_Membrane_comp$From
+
+Cytoplasm_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Cytoplasm.csv" , header = TRUE)
+Cytoplasm_comp <- Cytoplasm_comp$From 
+
+
+Cytoskeleton_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Cytoskeleton.csv" , header = TRUE)
+Cytoskeleton_comp <- Cytoskeleton_comp$From
+
+ER_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/ER.csv" , header = TRUE)
+ER_comp <- ER_comp$From
+
+Golgi_apparatus_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Golgi_apparatus.csv" , header = TRUE)
+Golgi_apparatus_comp <- Golgi_apparatus_comp$From
+
+Lysosomes_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Lysosomes.csv" , header = TRUE)
+Lysosomes_comp <- Lysosomes_comp$From
+
+Mitochondrion_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Mitochondrion.csv" , header = TRUE)
+Mitochondrion_comp <- Mitochondrion_comp$From
+
+
+Nucleus_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Nucleus.csv" , header = TRUE)
+Nucleus_comp <- Nucleus_comp$From
+
+
+Sarcomere_comp <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Uniprot_compartments/Sarcomere.csv" , header = TRUE)
+Sarcomere_comp <- Sarcomere_comp$From
+```
+
+# Functions 
+```{r Functions}
+# 1 
+perform_module_comparisons_mutexc <- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) && value_col %in% names(df))) {
+    stop("Specified columns do not exist in the dataframe.")
+  }
+
+  # Get a list of all unique modules
+  modules <- unique(df[[module_col]])
+
+  # Initialize an empty dataframe to store results
+  results <- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data <- df %>% filter(!!sym(module_col) == module) %>% pull(!!sym(value_col))
+
+    # Data for all other modules
+    other_data <- df %>% filter(!!sym(module_col) != module) %>% pull(!!sym(value_col))
+
+    # Perform the Wilcoxon test
+    test_result <- wilcox.test(current_data, other_data)
+
+    # Add the results to the dataframe
+    results <- rbind(results, data.frame(Module1 = module,
+                                         Module2 = "Others",
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(results)
+}
+
+
+# 2 
+perform_module_comparisons_mutexc_2 <- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) && value_col %in% names(df))) {
+    stop("Specified columns do not exist in the dataframe.")
+  }
+
+  # Get a list of all unique modules
+  modules <- unique(df[[module_col]])
+
+  # Initialize an empty list to store combined data frames
+  combined_df_list <- list()
+
+  # Initialize an empty dataframe to store results
+  results <- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data <- df %>% filter(!!sym(module_col) == module) %>% 
+                    mutate(Group = as.character(module))
+
+    # Data for all other modules
+    other_data <- df %>% filter(!!sym(module_col) != module) %>% 
+                    mutate(Group = paste("Not", module, sep=""))
+
+    # Combine current module data with other module data
+    combined_data <- rbind(current_data, other_data)
+
+    # Add the combined data to the list
+    combined_df_list[[module]] <- combined_data
+
+    # Perform the Wilcoxon test
+    test_result <- wilcox.test(current_data[[value_col]], other_data[[value_col]])
+
+    # Add the results to the dataframe
+    results <- rbind(results, data.frame(Module1 = module,
+                                         Module2 = "Others",
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(list("results" = results, "combined_data" = combined_df_list))
+}
+
+
+# 3 
+# Generate enrichment function limited to the EXPRESSED proteins.
+perform_module_disease_analysis_2 <- function(toptable, diseaseGenes) {
+  # Prepare an empty list to collect results
+  results <- list()
+  
+  # Ensure 'Modules' and 'Protein' columns exist in 'toptable'
+  if(!"Modules" %in% names(toptable)) {
+    stop("Column 'Modules' not found in the 'toptable'.")
+  }
+  if(!"Protein" %in% names(toptable)) {
+    stop("Column 'Protein' not found in the 'toptable'.")
+  }
+  
+  # Filter disease genes to include only those that are expressed in toptable
+  expressedDiseaseGenes <- lapply(diseaseGenes, function(genes) {
+    intersect(genes, toptable$Protein)
+  })
+  
+  # Loop through each module
+  modules <- unique(toptable$Modules)
+  for (module in modules) {
+    # Get the proteins in the module
+    moduleGenes <- toptable$Protein[toptable$Modules == module]
+    
+    # Loop through each disease gene set
+    for (diseaseName in names(expressedDiseaseGenes)) {
+      # Find the intersecting genes between the module and the expressed disease genes
+      diseaseModuleIntersect <- intersect(moduleGenes, expressedDiseaseGenes[[diseaseName]])
+      
+      # Calculate elements for the contingency table
+      numIntersect = length(diseaseModuleIntersect)
+      numInModuleNotDisease = length(moduleGenes) - numIntersect
+      numInDiseaseNotModule = length(expressedDiseaseGenes[[diseaseName]]) - numIntersect
+      numInNeither = nrow(toptable) - (numIntersect + numInModuleNotDisease + numInDiseaseNotModule)
+      
+      # Build the contingency table
+      table <- matrix(c(
+        numIntersect, # Both in disease list and module
+        numInModuleNotDisease, # In module but not disease list
+        numInDiseaseNotModule, # In disease list but not module
+        numInNeither # In neither list
+      ), nrow = 2, byrow = TRUE)
+      
+      # Perform chi-squared test and Fisher's exact test with error handling
+      chiSqTestResult <- tryCatch({
+        chisq.test(table, correct = TRUE)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      fisherTestResult <- tryCatch({
+        fisher.test(table)
+      }, error = function(e) {
+        list(p.value = NA, odds.ratio = NA)
+      }, warning = function(w) {
+        list(p.value = NA, odds.ratio = NA)
+      })
+      
+      # Calculate percent overlap, handle division by zero
+      percentOverlap <- if (length(moduleGenes) > 0) {
+        (numIntersect / length(expressedDiseaseGenes[[diseaseName]])) * 100
+      } else {
+        0
+      }
+      
+      # Convert intersecting genes to a single character string
+      intersectingGenesStr <- if (numIntersect > 0) {
+        paste(diseaseModuleIntersect, collapse = ";")
+      } else {
+        ""  # Use an empty string to indicate no intersection
+      }
+      
+      # Append to results list
+      results[[paste(module, diseaseName, sep = "_")]] <- data.frame(
+        Modules = module,
+        Disease = diseaseName,
+        ChiSqPValue = chiSqTestResult$p.value,
+        FisherPValue = fisherTestResult$p.value,
+        OddsRatio = fisherTestResult$estimate,
+        PercentOverlap = percentOverlap,
+        IntersectingGenes = intersectingGenesStr
+      )
+    }
+  }
+  
+  # Combine results into a single data frame
+  combined_df <- do.call(rbind, results)
+  return(combined_df)
+}
+
+
+# 4 
+# For testing for enrichment in the circos plot 
+perform_module_disease_analysis <- function(toptable, diseaseGenes) {
+  # Prepare an empty list to collect results
+  results <- list()
+  
+  # Ensure 'Modules' and 'Protein' columns exist in 'toptable'
+  if(!"Modules" %in% names(toptable)) {
+    stop("Column 'Modules' not found in the 'toptable'.")
+  }
+  if(!"Protein" %in% names(toptable)) {
+    stop("Column 'Protein' not found in the 'toptable'.")
+  }
+  
+  # Filter disease genes to include only those that are expressed in toptable
+  expressedDiseaseGenes <- lapply(diseaseGenes, function(genes) {
+    intersect(genes, toptable$Protein)
+  })
+  
+  # Loop through each module
+  modules <- unique(toptable$Modules)
+  for (module in modules) {
+    # Get the genes in the module
+    moduleGenes <- toptable$Protein[toptable$Modules == module]
+    
+    # Loop through each disease gene set
+    for (diseaseName in names(expressedDiseaseGenes)) {
+      # Find the intersecting genes between the module and the expressed disease genes
+      diseaseModuleIntersect <- intersect(moduleGenes, expressedDiseaseGenes[[diseaseName]])
+      
+      # Calculate elements for the contingency table
+      numIntersect = length(diseaseModuleIntersect)
+      numInModuleNotDisease = length(moduleGenes) - numIntersect
+      numInDiseaseNotModule = length(expressedDiseaseGenes[[diseaseName]]) - numIntersect
+      numInNeither = nrow(toptable) - (numIntersect + numInModuleNotDisease + numInDiseaseNotModule)
+      
+      # Build the contingency table
+      table <- matrix(c(
+        numIntersect, # Both in disease list and module
+        numInModuleNotDisease, # In module but not disease list
+        numInDiseaseNotModule, # In disease list but not module
+        numInNeither # In neither list
+      ), nrow = 2, byrow = TRUE)
+      
+      # Perform chi-squared test and Fisher's exact test with error handling
+      chiSqTestResult <- tryCatch({
+        chisq.test(table, correct = TRUE)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      fisherTestResult <- tryCatch({
+        fisher.test(table)
+      }, error = function(e) {
+        list(p.value = NA)
+      }, warning = function(w) {
+        list(p.value = NA)
+      })
+      
+      # Calculate percent overlap, handle division by zero
+      percentOverlap <- if (length(moduleGenes) > 0) {
+        (numIntersect / length(expressedDiseaseGenes[[diseaseName]])) * 100
+      } else {
+        0
+      }
+      
+      # Convert intersecting genes to a single character string
+      intersectingGenesStr <- if (numIntersect > 0) {
+        paste(diseaseModuleIntersect, collapse = ";")
+      } else {
+        ""  # Use an empty string to indicate no intersection
+      }
+      
+      # Append to results list
+      results[[paste(module, diseaseName, sep = "_")]] <- data.frame(
+        Modules = module,
+        Disease = diseaseName,
+        ChiSqPValue = chiSqTestResult$p.value,
+        FisherPValue = fisherTestResult$p.value,
+        PercentOverlap = percentOverlap,
+        IntersectingGenes = intersectingGenesStr
+      )
+    }
+  }
+  
+  # Combine results into a single data frame
+  results_df <- do.call(rbind, results)
+  return(results_df)
+}
+```
+
+# Fig-3-A- Tissue spec module percentages 
+```{r Tissue spec module percentaages}
+
+Tissue_spec %>% head()
+
+
+# Specificity ranges 0-4, where 0 is most specific and 4 is most specific, a way I notated the classes for easier subsetting. 
+Tissue_spec_Elevated <- Tissue_spec[Tissue_spec$Specificity >= 0 , ]$Uniprot
+
+
+
+Heart_Elevated_TT <- Toptable_Modules[Toptable_Modules$Proteins %in% Tissue_spec_Elevated, ]
+Heart_Elevated_TT %>% head()
+Heart_Elevated_TT$Modules.x %>% unique()
+
+# Summarize the count of each module in Toptable_Modules
+module_counts_toptable <- Toptable_Modules %>% 
+  group_by(Modules.x) %>% 
+  summarize(Count = n())
+
+# Summarize the count of each module in Heart_Elevated_TT
+module_counts_heart_elevated <- Heart_Elevated_TT %>% 
+  group_by(Modules.x) %>% 
+  summarize(Count = n())
+
+
+# Calculate the percentage for each module in Heart_Elevated_TT
+heart_elevated_summary <- module_counts_heart_elevated %>% 
+  left_join(module_counts_toptable, by = "Modules.x", suffix = c("_Heart", "_Toptable")) %>%
+  mutate(Percentage = (Count_Heart / Count_Toptable) * 100)
+heart_elevated_summary
+
+yellowDF <- data.frame(
+  Modules.x = "yellow",
+  Count_Heart = 0, 
+  Count_Toptable = 0, 
+  Percentage = 0 
+  )
+
+heart_elevated_summary_yellow <- rbind(heart_elevated_summary,yellowDF)
+
+module_order <- c("green","darkgreen","midnightblue","salmon","lightyellow",  "lightgreen","blue", "magenta","darkred", "brown", "yellow", "royalblue", "grey") 
+
+heart_elevated_summary_2 <- heart_elevated_summary_yellow
+
+
+# Factor the Module column in Fulltrait_df
+heart_elevated_summary_2$Modules.x <- factor(heart_elevated_summary_2$Modules.x, levels = module_order)
+
+
+# Plotting the percentages
+ggplot(data = heart_elevated_summary_2, mapping = aes(x = Modules.x, y = Percentage, fill = Modules.x)) +
+  geom_col() +
+  scale_fill_identity() +  
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "",
+       x = "",
+       y = "Percentage of heart elevated proteins within each module") +
+  scale_fill_identity()+
+  ylim(c(0,10))+
+  geom_hline(yintercept = 4.444, color = "red", linetype = "dashed", linewidth = 0.8)
+  
+heart_elevated_summary_2$Percentage %>% range()
+heart_elevated_summary_2$Percentage %>% median()
+
+
+
+```
+
+
+# Fig-3-B &. S8 Tissue specificity scores 
+```{r Tissue specificity across modules}
+
+# Wrangle 
+Tissue_spec_merge <- merge(Tissue_spec_2, Toptable_Modules, by.x = "Uniprot", by.y = "Proteins")
+
+Tissue_spec_merge$Heart.Ventricle <- Tissue_spec_merge$Heart.Ventricle %>% as.double()
+
+Tissue_spec_merge_2 <- Tissue_spec_merge
+
+
+
+# Example usage
+# Replace "Modules" with the actual column name of your modules
+# Replace "Heart.Ventricle" with the actual column name of your values
+Tissue_spec_merge$Heart.Ventricle <- as.double(Tissue_spec_merge$Heart.Ventricle)
+
+results_df_HV <- perform_module_comparisons_mutexc(Tissue_spec_merge, "Modules.x", "Heart.Ventricle")
+
+
+results_df_HV[results_df_HV$WilcoxPValue < 0.05, ]
+
+#### With mutually exclusive sets and plotting #### 
+
+# Example usage
+# Replace "Modules" with the actual column name of your modules
+# Replace "Heart.Ventricle" with the actual column name of your values
+
+results_df_HV <- perform_module_comparisons_mutexc_2(Tissue_spec_merge, "Modules.x", "Heart.Ventricle")
+results_df_HV$results[results_df_HV$results$WilcoxPValue<0.05, ]
+
+results_df_HV_combined <- do.call(rbind, results_df_HV$combined_data)
+results_df_HV_combined$Group %>% unique()
+
+Group_order <- c("green", "Notgreen","darkgreen", "Notdarkgreen", "midnightblue","Notmidnightblue", "salmon","Notsalmon", "lightyellow", "Notlightyellow", "lightgreen", "Notlightgreen","blue", "Notblue", "magenta" ,"Notmagenta","darkred", "Notdarkred", "brown", "Notbrown", "yellow", "Notyellow","royalblue", "Notroyalblue", "grey", "Notgrey" )
+
+# Factor the Module column in Fulltrait_df
+results_df_HV_combined$Group <- factor(results_df_HV_combined$Group, levels = Group_order)
+
+
+my_colors <- c("green", "green","darkgreen", "darkgreen", "midnightblue","midnightblue", "salmon","salmon", "lightyellow", "lightyellow", "lightgreen", "lightgreen","blue", "blue", "magenta" ,"magenta","darkred", "darkred", "brown", "brown", "yellow", "yellow","royalblue", "royalblue", "grey", "grey")
+
+ggplot(results_df_HV_combined, aes(x = Group, y = Heart.Ventricle, fill = Group)) + 
+  geom_boxplot() +
+  scale_fill_manual(values = my_colors) +  # Manually setting the colors
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +  # Removing the legend
+  labs(title = "Ventricle tissue specificity scores of proteins",
+       x = "",
+       y = "TS score ") +
+  coord_cartesian(
+  ylim = c(-5,5)
+)+ geom_hline(yintercept = 0.33, color = "red", linetype = "dashed", linewidth = 0.6) 
+ 
+
+
+#### Tissue spec DA vs ~ DA #### 
+Tissue_spec_merge_DA <- Tissue_spec_merge[Tissue_spec_merge$P.Value.x < 0.05, ]
+
+Tissue_spec_merge_NotDA <- Tissue_spec_merge[Tissue_spec_merge$P.Value.x > 0.05, ]
+
+
+
+wilcox.test(Tissue_spec_merge_DA$Heart.Ventricle,Tissue_spec_merge_NotDA$Heart.Ventricle )
+
+ggplot(Tissue_spec_merge, aes(x = DE_or_Not.x, y = Heart.Ventricle, fill = DE_or_Not.x)) +
+  geom_boxplot() +
+  scale_x_discrete(labels = c("Non-DA", "DA")) +  # Manually setting group names
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +  # Removing the legend
+  labs(title = "Ventricle tissue specificity scores of proteins",
+       x = "",
+       y = "Heart ventricle TS score") +
+coord_cartesian(ylim = c(-2.5,2.5))
+
+```
+
+
+# Fig-3-C Heatmap for broad locations 
+```{r Simplified heatmap and barplot}
+
+Toptable_Modules %>% colnames()
+
+colnames(Toptable_Modules) <- c("X", "Protein","kTotal", "kWithin",        "kOut", "kDiff", "logFC", "AveExpr", "t", "P.Value","adj.P.Val" ,"B" , "threshold_P", "Modules", "DE_or_Not", "Norm_kIN", "Norm_kOut", "logFC.y",     "AveExpr.y", "t.y", "P.Value.y", "adj.P.Val.y", "B.y" , "threshold_P.y",    "Modules.y", "DE_or_Not.y", "Is_DA", "Is_DOXcorrelated", "Is_Hub", "Is_Cis_pQTL", "Is_Trans_pQTL", "Is_pQTL", "pLI_assigned", "pLI_Mut.Intolerant", "pLI_Mut.Tolerant", "Is_Druggable", "Is_CVD_protein",    "Is_CVD_PPI_protein")
+
+Toptable_Modules$Modules %>% unique()
+
+# Plot results 
+results_df <- perform_module_disease_analysis_2(toptable = Toptable_Modules, diseaseGenes = HPA_General)
+
+
+results_df$Disease %>% unique()
+results_df_2 <- results_df[results_df$Disease %in% c("Intracellular", "Membrane","Plasma","Secreted"), ]
+
+results_df_2[(results_df_2$FisherPValue < 0.05) & (results_df_2$OddsRatio > 1),c(1:5)]
+melted_results <- melt(results_df_2, id.vars = c("Modules", "Disease", "PercentOverlap", "FisherPValue","OddsRatio" ))
+
+
+# First, create a new column that indicates where to place stars
+melted_results$Star <- ifelse(melted_results$FisherPValue < 0.05 & melted_results$OddsRatio > 1, "*", "")
+
+
+module_order <- c("green","darkgreen","midnightblue","salmon","lightyellow", "lightgreen","blue", "magenta","darkred", "brown", "yellow", "royalblue", "grey")
+
+
+melted_results_2 <- melted_results
+# Factor the Module column in Fulltrait_df
+melted_results_2$Modules <- factor(melted_results_2$Modules, levels = module_order)
+
+# Vertical
+ggplot(melted_results_2, aes(x = Modules, y = Disease, fill = OddsRatio)) +
+  geom_tile(color = "black") +  
+  scale_fill_gradientn(colors = c("blue", "white", "red"), 
+                       values = scales::rescale(c(0, 1, max(melted_results_2$OddsRatio))), 
+                       na.value = "grey50", name = "Odds ratio") +
+  geom_text(aes(label = Star), color = "black", size = 8, na.rm = TRUE) +
+  labs(x = "", y = "") +  
+  theme_minimal() +  
+  theme(
+    axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
+    axis.text.y = element_text(hjust = 0.5),
+    axis.title = element_text(size = 12),
+    legend.key.size = unit(0.6, 'cm'),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 8)
+  )
+
+
+```
+
+
+# Fig-3-D Subcellular compartment distribution 
+```{r Protein compartment network}
+# Assuming 'Toptable_Modules' is your data frame with proteins and their modules
+Toptable_Modules_comp <- Toptable_Modules
+
+# Create an empty data frame for edges
+edges <- data.frame(from = character(), to = character())
+
+list_of_compartments <- list(
+  Autophagosome = Autophagosome_comp,
+  Cell_Membrane = Cell_Membrane_comp,
+  Cytoplasm = Cytoplasm_comp,
+  Cytoskeleton = Cytoskeleton_comp,
+  ER = ER_comp,
+  Golgi_apparatus = Golgi_apparatus_comp,
+  Lysosomes = Lysosomes_comp,
+  Mitochondrion = Mitochondrion_comp,
+  Nucleus = Nucleus_comp,
+  Sarcomere = Sarcomere_comp
+)
+
+# List of proteins in each compartment 
+compartment_list <- list(
+  Autophagosome = Autophagosome_comp,
+  Cell_Membrane = Cell_Membrane_comp,
+  Cytoplasm = Cytoplasm_comp,
+  Cytoskeleton = Cytoskeleton_comp,
+  ER = ER_comp,
+  Golgi_apparatus = Golgi_apparatus_comp,
+  Lysosomes = Lysosomes_comp,
+  Mitochondrion = Mitochondrion_comp,
+  Nucleus = Nucleus_comp,
+  Sarcomere = Sarcomere_comp
+)
+
+
+# Loop through each compartment vector and add rows to the edges data frame
+for(compartment_name in names(list_of_compartments)) {
+  compartment <- list_of_compartments[[compartment_name]]
+  for(protein in compartment) {
+    module <- Toptable_Modules_comp$Modules[Toptable_Modules_comp$Protein == protein ]
+    if(length(module) > 0) {
+      edges <- rbind(edges, data.frame(from = module, to = compartment_name))
+    }
+  }
+}
+
+
+# Create Nodes data frame
+unique_nodes <- unique(c(as.character(edges$from), as.character(edges$to)))
+Nodes <- data.frame(name = unique_nodes)
+
+# Modify edges to use indices
+edges$from <- match(edges$from, Nodes$name) - 1  # -1 because JavaScript is zero-indexed
+
+edges$to <- match(edges$to, Nodes$name) - 1
+
+# Add a 'value' column to edges if not present
+edges$value <- 1  # or any other appropriate value
+
+
+
+module_df <- data.frame(
+  protein = Toptable_Modules$Protein,
+  module = as.character(Toptable_Modules$Modules)
+)
+
+
+# Create a color mapping for modules (replace with actual colors)
+module_colors <- setNames((Toptable_Modules$Modules %>% unique()), (Toptable_Modules$Modules %>% unique()))
+
+
+
+
+# Create a grid that combines compartments and modules
+grid <- lapply(names(compartment_list), function(compartment) {
+  proteins <- compartment_list[[compartment]]
+  modules <- module_df$module[module_df$protein %in% proteins]
+  c(setNames(rep(compartment, length(proteins)), proteins),
+    setNames(modules, proteins))
+})
+
+# Flatten the grid list
+grid <- unlist(grid)
+
+
+# Prepare the color list for the grid
+grid_colors <- sapply(names(grid), function(name) {
+  if (name %in% module_df$protein) {
+    module_colors[grid[name]]
+  } else {
+    "white"  # color for compartments
+  }
+})
+grid <- grid %>% as.data.frame()
+
+
+
+# Create links data frame
+links <- do.call(rbind, lapply(names(compartment_list), function(compartment) {
+  proteins <- compartment_list[[compartment]]
+  modules <- module_df$module[module_df$protein %in% proteins]
+  data.frame(from = compartment, to = modules)
+}))
+
+
+
+
+
+
+
+# Adjust the text size for sector labels and tick labels
+circos.par("track.height" = 0.3, "points.overflow.warning" = FALSE)
+par(cex = 0.5, mar = c(0, 0, 0, 0))
+
+# Chord diagram plotting 
+chordDiagram(
+  x = links,
+  col = module_colors[links$to],
+  transparency = 0.5
+)
+
+
+# Reset the default circos parameters after plotting
+circos.clear()
+
+
+# Results for statistical enrichment 
+results_df <- perform_module_disease_analysis(toptable = Toptable_Modules, diseaseGenes = compartment_list)
+
+
+results_df[(results_df$FisherPValue < 0.05), ]$Modules %>% unique
+results_df <- results_df %>% as.tibble() 
+
+
+results_df[(results_df$FisherPValue < 0.05) & (results_df$Modules == "green"), ]
+
+results_df[(results_df$FisherPValue < 0.05) & (results_df$Modules == "darkgreen"), ]
+
+results_df[(results_df$FisherPValue < 0.05) & (results_df$Modules == "midnightblue"), ]
+
+results_df[(results_df$FisherPValue < 0.05) & (results_df$Modules == "salmon"), ]
+
+results_df[(results_df$FisherPValue < 0.05) & (results_df$Modules == "lightyellow"), ]
+```
