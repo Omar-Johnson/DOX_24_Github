@@ -73,6 +73,53 @@ New_RNA_PRO_DF_3 <- merge(Toptable_Modules, New_RNA_PRO_DF_2, by.x = "Proteins",
 
 hubs <- read.csv( file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/hubs.csv", header = TRUE)
 
+perform_module_comparisons_mutexc_2 <- function(df, module_col, value_col) {
+  # Ensure the necessary columns exist
+  if (!(module_col %in% names(df) && value_col %in% names(df))) {
+    stop("Specified columns do not exist in the dataframe.")
+  }
+
+  # Get a list of all unique modules
+  modules <- unique(df[[module_col]])
+
+  # Initialize an empty list to store combined data frames
+  combined_df_list <- list()
+
+  # Initialize an empty dataframe to store results
+  results <- data.frame(Module1 = character(),
+                        Module2 = character(),
+                        WilcoxPValue = numeric(),
+                        stringsAsFactors = FALSE)
+
+  # Loop through each module
+  for (module in modules) {
+    # Data for the current module
+    current_data <- df %>% filter(!!sym(module_col) == module) %>% 
+                    mutate(Group = as.character(module))
+
+    # Data for all other modules
+    other_data <- df %>% filter(!!sym(module_col) != module) %>% 
+                    mutate(Group = paste("Not", module, sep=""))
+
+    # Combine current module data with other module data
+    combined_data <- rbind(current_data, other_data)
+
+    # Add the combined data to the list
+    combined_df_list[[module]] <- combined_data
+
+    # Perform the Wilcoxon test
+    test_result <- wilcox.test(current_data[[value_col]], other_data[[value_col]])
+
+    # Add the results to the dataframe
+    results <- rbind(results, data.frame(Module1 = module,
+                                         Module2 = "Others",
+                                         WilcoxPValue = test_result$p.value))
+  }
+
+  return(list("results" = results, "combined_data" = combined_df_list))
+}
+
+PPI_filepath <- "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/PPI_Functionally_annotated/Physical_PPI_no_weight.csv"
 ```
 
 
@@ -584,6 +631,197 @@ ggraph(graph_network, layout = "stress") +
   theme_graph() +
   labs(color = "Module")
 
+
+
+```
+
+# Fig S6 Network hub percentages 
+```{r Network hub percentages}
+Hub_sum_table <- hubs %>% group_by(Module) %>%
+  summarize(Number = n())
+
+Hub_sum_table$prop <- (Hub_sum_table$Number)/sum(Hub_sum_table$Number)
+
+Percent_Hub_Df <- data.frame(
+  
+  percent_hubs = c(1.24, 19.90, 3.23, 5.21, 0.99, 14.40, 10.90, 5.21, 1.49, 17.90, 13.90, 5.71), 
+  
+  Number = c(5,80,13,21,4,58,44,21,6,72,56,23),
+  
+  module_order = c("MEbrown", "MEdarkred", "MEmagenta", "MElightgreen", "MEblue",      "MEgreen","MElightyellow","MEsalmon","MEyellow","MEroyalblue","MEdarkgreen", "MEmidnightblue")
+)
+
+Percent_Hub_Df$prop.hub <- Percent_Hub_Df$percent_hubs/100
+  Percent_Hub_Df$Number <- Percent_Hub_Df$Number %>% as.character()
+
+# Factor the Module column in Fulltrait_df_2
+Percent_Hub_Df$module_order <- factor(Percent_Hub_Df$module_order, levels = c("MEbrown", "MEdarkred", "MEmagenta", "MElightgreen", "MEblue",      "MEgreen","MElightyellow","MEsalmon","MEyellow","MEroyalblue","MEdarkgreen", "MEmidnightblue") )
+
+Percent_Hub_Df$Number <- Percent_Hub_Df$Number %>% as.double()
+Percent_Hub_Df$Module <- c("brown", "darkred", "magenta", "lightgreen", "blue",      "green","lightyellow","salmon","yellow","royalblue","darkgreen", "midnightblue")
+  
+
+Percent_Hub_Df$Module <- factor(x = Percent_Hub_Df$Module, levels = c("green","darkgreen","midnightblue","salmon", "lightyellow", "lightgreen", "blue","magenta", "darkred","brown", "yellow","royalblue", "grey"))
+  
+  
+ggplot(Percent_Hub_Df, aes(x = Module, y = Number, fill = Module)) +
+  geom_col()+
+  scale_fill_identity()+
+  theme_classic()
+  
+```
+
+# Fig S7 Network protein connectivity comparison
+```{r Network protein connectivity comparison}
+DOXcorproteins <- Toptable_Modules[Toptable_Modules$Modules %in% c("green", "darkgreen", "midnightblue", "salmon", "lightyellow"), ]$Protein
+KIN_DF <- net$kIN
+KIN_DF$uniprot <- rownames(KIN_DF)
+KIN_DF_TT <- merge( Toptable_Modules, KIN_DF, by.x = "Protein", by.y = "uniprot")
+
+
+kIN_DF_Hubs <- KIN_DF_TT[KIN_DF_TT$Protein %in% hubs$Gene, ]
+kIN_DF_Not_Hubs <- KIN_DF_TT[!KIN_DF_TT$Protein %in% hubs$Gene, ]
+kIN_DF_Hubs_DOXcorr <- kIN_DF_Hubs[kIN_DF_Hubs$Protein %in% DOXcorproteins, ]
+kIN_DF_Hubs_NOT_DOXcorr <- kIN_DF_Hubs[!kIN_DF_Hubs$Protein %in% DOXcorproteins, ]
+
+
+wilcox.test(kIN_DF_Hubs$kWithin, kIN_DF_Not_Hubs$kWithin)
+wilcox.test(kIN_DF_Hubs_DOXcorr$kWithin, kIN_DF_Hubs_NOT_DOXcorr$kWithin)
+wilcox.test(kIN_DF_Hubs_NOT_DOXcorr$kWithin, kIN_DF_Not_Hubs$kWithin)
+
+
+kIN_DF_Hubs$kWithin %>% length()
+kIN_DF_Not_Hubs$kWithin %>% length()
+kIN_DF_Hubs_DOXcorr$kWithin  %>% length()
+kIN_DF_Hubs_NOT_DOXcorr$kWithin  %>% length()
+
+
+
+# Do the boxplot 
+# Create a data frame
+pLI_Hubs_DF_Boxplot <- data.frame(
+  values = c(kIN_DF_Hubs_DOXcorr$kWithin, kIN_DF_Hubs_NOT_DOXcorr$kWithin, kIN_DF_Not_Hubs$kWithin, kIN_DF_Hubs$kWithin ),
+  group = factor(c(rep("DOX cor hub", length(kIN_DF_Hubs_DOXcorr$kWithin))
+                   , rep("Non-DOX cor hub", length(kIN_DF_Hubs_NOT_DOXcorr$kWithin)), rep("Non-hub", length(kIN_DF_Not_Hubs$kWithin)), rep("All-hub", length(kIN_DF_Hubs$kWithin))))
+)
+
+
+
+
+# Create boxplot
+ggplot(pLI_Hubs_DF_Boxplot, aes(x = group, y = values)) +
+  geom_boxplot() +
+  labs(x = "", y = "connectivity (kIN)") +
+  theme_classic()+
+  coord_cartesian(ylim = c(0,200))+
+  theme(axis.text.x = element_text(face = "bold", color = "black",
+size = 8, angle = 0, vjust = 0 ))
+```
+
+# Fig S11 Physical protein interactor co-expression
+```{r }
+
+PPI_Noweight<- read.csv(file = PPI_filepath, header = TRUE)
+PPI_Confident <- PPI_Noweight[PPI_Noweight$stringdb..score >= 0.9, ]
+PPI_Confident %>% dim()
+PPI_Confident
+Toptable_Modules_PPI <- Toptable_Modules
+
+
+
+
+# Step 1: Join Toptable_Modules_PPI with PPI_Confident to find interactions for each protein
+# We perform two joins to capture interactions where the protein is in either query_term1 or query_term2
+interactions <- PPI_Confident %>%
+  left_join(Toptable_Modules_PPI, by = c("query_term1" = "Protein")) %>%
+  rename(Module1 = Modules) %>%
+  left_join(Toptable_Modules_PPI, by = c("query_term2" = "Protein")) %>%
+  rename(Module2 = Modules) %>%
+  dplyr::select(query_term1, query_term2, Module1, Module2)
+
+# Step 2: Calculate the proportion of interactors in the same module for each protein
+module_overlap <- interactions %>%
+  mutate(Same_Module = Module1 == Module2) %>%
+  group_by(query_term1) %>%
+  summarise(
+    Total = n(),
+    Same_Module_Count = sum(Same_Module, na.rm = TRUE),
+    Prop_PPI_overlap = Same_Module_Count / Total
+  ) %>%
+  ungroup()
+
+# Step 3: Merge the calculated proportions back into the Toptable_Modules_PPI
+Toptable_Modules_PPI <- Toptable_Modules_PPI %>%
+  left_join(module_overlap, by = c("Protein" = "query_term1"))
+
+# Step 4: Ensure all proteins have a value, replacing NA with 0 where no interactors are found
+Toptable_Modules_PPI$Prop_PPI_overlap <- ifelse(is.na(Toptable_Modules_PPI$Prop_PPI_overlap), 0, Toptable_Modules_PPI$Prop_PPI_overlap)
+
+# View the results
+print(Toptable_Modules_PPI)
+Toptable_Modules_PPI$Prop_PPI_overlap %>% hist()
+
+
+
+# For all module proteins 
+ggplot(Toptable_Modules_PPI, aes(x = Prop_PPI_overlap, y = Modules, fill = Modules)) +
+    geom_boxplot(alpha = 0.8) +
+  geom_point(alpha = 0.3)+
+  labs(title = "% module proteins with same mod PPI",
+       x = "% module overlap",
+       y = "") +
+  theme_minimal()+
+  scale_fill_identity() 
+
+
+
+
+PPI_mod_res <- perform_module_comparisons_mutexc_2(df = Toptable_Modules_PPI , module_col = "Modules", value_col = "Prop_PPI_overlap")
+PPI_mod_res$results[PPI_mod_res$results$WilcoxPValue < 0.05, ]
+
+
+module_summary <- Toptable_Modules_PPI %>%
+  group_by(Modules) %>%
+  summarise(
+    Mean_PPI_Overlap = mean(Prop_PPI_overlap, na.rm = TRUE),
+    Median_PPI_Overlap = median(Prop_PPI_overlap, na.rm = TRUE)
+  )
+module_summary$Mean_PPI_Overlap %>% range()
+
+
+
+
+
+
+
+
+
+# For hub proteins 
+Toptable_Modules_PPI_hub <- Toptable_Modules_PPI[Toptable_Modules_PPI$Protein %in%hubs$Gene, ]
+
+Toptable_Modules_PPI_NOThub <- Toptable_Modules_PPI[!Toptable_Modules_PPI$Protein %in%hubs$Gene, ]
+
+wilcox.test(Toptable_Modules_PPI_hub$Prop_PPI_overlap, Toptable_Modules_PPI_NOThub$Prop_PPI_overlap)
+
+pLI_Hubs_DF_Boxplot <- data.frame(
+  values = c(Toptable_Modules_PPI_hub$Prop_PPI_overlap, Toptable_Modules_PPI_NOThub$Prop_PPI_overlap),
+  group = factor(c(rep("Hubs", length(Toptable_Modules_PPI_hub$Prop_PPI_overlap)), rep("Not Hubs", length(Toptable_Modules_PPI_NOThub$Prop_PPI_overlap))))
+)
+
+
+# Create boxplot
+ggplot(pLI_Hubs_DF_Boxplot, aes(x = group, y = values)) +
+  geom_violin() +
+  geom_point(alpha = 0.2)+
+  labs(x = "", y = "% Physical PPI in saame module") +
+  theme_minimal()
+
+ggplot(pLI_Hubs_DF_Boxplot, aes(x = group, y = values)) +
+  geom_boxplot() +
+  geom_point(alpha = 0.2)+
+  labs(x = "", y = "% Physical PPI in saame module") +
+  theme_minimal()
+pLI_Hubs_DF_Boxplot$values %>% hist(breaks = 100)
 
 
 ```

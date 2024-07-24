@@ -317,7 +317,7 @@ Protein_DF_Abundance %>% head()
 Meta
 ```
 
-# Viewing how NA threshold vs remaining proteins  
+# FigS2A Viewing how NA threshold vs remaining proteins  
 ```{r viewing NA and imp}
 
 # View how NA thresholds affect the amount of proteins remaining to model
@@ -425,7 +425,7 @@ normalizedData[,5] %>% hist(breaks = 100)
 normalizedData[,6] %>% hist(breaks = 100)
 ```
 
-# View distribution of imputed NA values for all samples  
+# FigS2 B View distribution of imputed NA values for all samples  
 ```{r  Imputed value distribution}
 na_positions <- is.na(Protein_DF_Abundance_imp)
 
@@ -572,6 +572,7 @@ for (i in top_proteins) {
           las = 2)  # las = 2 makes the axis labels perpendicular to the axis
 }
 ```
+
 
 # Linear model + RUVg + Imputation 
 ```{r RUVg model}
@@ -763,7 +764,7 @@ for (i in top_proteins) {
 }
 ```
 
-# RUV III
+# FigS2 C&D RUV III
 ```{r RUVIII}
 
 # Convert to DGEList object 

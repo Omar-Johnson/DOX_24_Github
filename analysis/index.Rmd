@@ -10,8 +10,15 @@ editor_options:
 
 Research website for the project "DNA damage-associated protein co-expression networks in cardiomyocytes provide insight into tolerance to genetic variation and cardiovascular disease" 
 
+# Preprocessing and comparison of protein acqustion types 
+[Unwanted tehnical variation removal and differential abundance testing  ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_RUV_Limma.html)
 
-# Figures & additional analyses
+[Data independent acquisition (DIA) vs dependent acquiston (DDA) protein abundance and DOX responses](https://omar-johnson.github.io/DOX_24_Github/DDA_DIA_Comparison.html)
+
+
+
+
+# Main Figures & additional analyses
 [Figure 1: DOX-treated iPSC-CMs cluster by treatment and most closely resemble the heart ventricle proteome. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_1.html)
 
 
@@ -36,5 +43,4 @@ Research website for the project "DNA damage-associated protein co-expression ne
 [Figure 8: DOX-correlated hub proteins are enriched for physical protein interactors of CVD risk proteins. ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_8.html)
 
 
-[Data preprocessing and differential abundance testing  ](https://omar-johnson.github.io/DOX_24_Github/Johnson_DOX_24_RUV_Limma.html)
 

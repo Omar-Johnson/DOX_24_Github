@@ -95,6 +95,8 @@ EnzymeTable <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteom
 
 TF_UNIPROT_ENSEMBL_2_2 <- read.csv(file ="/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Supplement/TF_UNIPROT_ENSEMBL_2.csv" , header = TRUE)
 
+Fam_db <- read.csv(file = "/Users/omarjohnson/Documents/Projects/Dox_Proteomics/Data/Proteomics/Data_sets/Families/Uniprot_DIA_famalies.csv", header = TRUE)
+
 ```
 
 
@@ -1105,4 +1107,202 @@ ggplot(EZ_Dataforplot_ordered_top_20, aes(x = hgnc_symbol, y = Pro_LogFC, fill =
 
 ```
 
+
+# Fig S10 Protein families
+```{r Protein fam, fig.height=15, fig.width=10}
+# Protein families
+
+Fam_db %>% colnames()
+Fam_db2 <- Fam_db[, colnames(Fam_db) %in% c("From","Protein.names", "Gene.Names", "Protein.families" , "InterPro" )]
+Fam_db2 %>% dim()
+Fam_db2 %>% colnames()
+Fam_db2_modules <- merge(Toptable_Modules, Fam_db2, by.x = "Protein", by.y ="From" )
+Fam_db2_modules %>% colnames()
+Fam_db2_modules %>% head()
+
+#### With regular readable ID #### 
+library(data.table)
+
+# Convert to data.table for faster operations
+setDT(Fam_db2_modules)
+
+# Unique modules and protein families
+unique_modules <- unique(Fam_db2_modules$Modules)
+unique_protein_families <- unique(Fam_db2_modules$Protein.families)
+
+# Define a function to perform Fisher's Exact Test
+perform_fishers_test <- function(module, family, df) {
+  # Count the number of occurrences in and out of the module
+  in_module_and_family <- sum(df$Modules == module & df$Protein.families == family)
+  in_module_not_family <- sum(df$Modules == module & df$Protein.families != family)
+  not_in_module_and_family <- sum(df$Modules != module & df$Protein.families == family)
+  not_in_module_not_family <- sum(df$Modules != module & df$Protein.families != family)
+
+  # Create contingency table
+  contingency_table <- matrix(c(in_module_and_family, in_module_not_family,
+                                not_in_module_and_family, not_in_module_not_family),
+                             nrow = 2)
+
+  # Perform Fisher's Exact Test
+  fisher_result <- fisher.test(contingency_table)
+  return(fisher_result$p.value)
+}
+
+
+# Initialize a data frame to store results
+enrichment_results <- data.frame(Module = rep(unique_modules, each = length(unique_protein_families)),
+                                 Family = rep(unique_protein_families, times = length(unique_modules)),
+                                 Fisher_p_value = NA)
+
+# Loop through each module and protein family and perform Fisher's test
+for(i in 1:nrow(enrichment_results)) {
+  module <- enrichment_results$Module[i]
+  family <- enrichment_results$Family[i]
+  p_value <- perform_fishers_test(module, family, Fam_db2_modules)
+  enrichment_results$Fisher_p_value[i] <- p_value
+}
+
+
+
+
+
+# Ensure all p-values are within [0, 1]
+enrichment_results_2 <- enrichment_results[!is.na(enrichment_results$Fisher_p_value) & enrichment_results$Fisher_p_value >= 0 & enrichment_results$Fisher_p_value <= 1, ]
+
+
+
+
+# Output the results
+Famenrich_pval_05 <- enrichment_results_2[enrichment_results_2$Fisher_p_value < 0.05, ]
+Famenrich_pval_01 <- enrichment_results_2[enrichment_results_2$Fisher_p_value < 0.01, ]
+Famenrich_pval_01$Module
+
+Famenrich_pval_05[Famenrich_pval_05$Module %in% c("green"), ]
+
+# Visualize terms  
+ggplot(data = Famenrich_pval_05[Famenrich_pval_05$Module %in% c("green"), ], aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Family",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 20)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+
+ggplot(data = Famenrich_pval_05[Famenrich_pval_05$Module %in% c("darkgreen"), ], aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Family",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 20)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+ggplot(data = Famenrich_pval_05[Famenrich_pval_05$Module %in% c("midnightblue"), ], aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Family",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 20)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+
+ggplot(data = Famenrich_pval_05[Famenrich_pval_05$Module %in% c("salmon"), ], aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Family",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 20)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+
+ggplot(data = Famenrich_pval_05[Famenrich_pval_05$Module %in% c("lightyellow"), ], aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Family",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 20)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+
+
+# Output the results
+enrichment_results_sig <- Famenrich_pval_05
+enrichment_results_sig_DOXcorr <- enrichment_results_sig[enrichment_results_sig$Module %in% c("green", "darkgreen", "midnightblue", "salmon","lightyellow"), ] 
+
+
+
+enrichment_results_sig_DOXcorr <- enrichment_results_sig_DOXcorr %>% as.tibble()
+enrichment_results_sig_DOXcorr %>% colnames()
+
+enrichment_results_sig %>% nrow()
+enrichment_results_sig_DOXcorr %>% nrow()
+
+
+enrichment_results_sig_DOXcorr_top <- enrichment_results_sig_DOXcorr %>%
+  group_by(Module) %>%
+  top_n(-5, Fisher_p_value) %>%
+  ungroup()
+enrichment_results_sig_DOXcorr_top %>% head()
+
+
+# Arrange by adjusted p value 
+enrichment_results_sig_DOXcorr_top <- enrichment_results_sig_DOXcorr_top %>%
+  arrange(desc(enrichment_results_sig_DOXcorr_top))
+
+enrichment_results_sig_DOXcorr_top$Family 
+
+
+# Visualize the total enriched GO terms using a vertical bar plot 
+ggplot(data = enrichment_results_sig_DOXcorr_top, aes(x = -log(Fisher_p_value), y = reorder(Family, -log(Fisher_p_value)), fill = Module)) +
+  geom_bar(stat = "identity") +
+  labs(
+    x = "-log(p-adj)",
+    y = "Biological Processes",
+    fill = "Module",
+    title = "GO enrichment analysis"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  xlim(c(0, 30)) +
+  scale_fill_identity(guide = "legend") +
+  facet_wrap(~ Module, ncol = 1, scales = "free_y")
+
+
+
+```
 
