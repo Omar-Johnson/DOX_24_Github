@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOmarJohnsonDOX24Githubtreec2a0643983d21c6a100d1f468e585e36e0fb4a31targetblankc2a0643a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomOmarJohnsonDOX24Githubtree85b47371762ed9419ea083861c6cc111fe82a87atargetblank85b4737a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/Omar-Johnson/DOX_24_Github/tree/c2a0643983d21c6a100d1f468e585e36e0fb4a31" target="_blank">c2a0643</a>
+<a href="https://github.com/Omar-Johnson/DOX_24_Github/tree/85b47371762ed9419ea083861c6cc111fe82a87a" target="_blank">85b4737</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomOmarJohnsonDOX24Githubtreec2a0643983d21c6a100d1f468e585e36e0fb4a31targetblankc2a0643a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomOmarJohnsonDOX24Githubtree85b47371762ed9419ea083861c6cc111fe82a87atargetblank85b4737a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/Omar-Johnson/DOX_24_Github/tree/c2a0643983d21c6a100d1f468e585e36e0fb4a31" target="_blank">c2a0643</a>.
+<a href="https://github.com/Omar-Johnson/DOX_24_Github/tree/85b47371762ed9419ea083861c6cc111fe82a87a" target="_blank">85b4737</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -555,6 +555,18 @@ were generated:
 <pre><code>
 Ignored files:
     Ignored:    .DS_Store
+
+Untracked files:
+    Untracked:  Johnson_DOX_24_1.Rmd
+    Untracked:  Johnson_DOX_24_2.Rmd
+    Untracked:  Johnson_DOX_24_3.Rmd
+    Untracked:  Johnson_DOX_24_4.Rmd
+    Untracked:  Johnson_DOX_24_5.Rmd
+    Untracked:  Johnson_DOX_24_7.Rmd
+    Untracked:  Johnson_DOX_24_RUV_Limma.Rmd
+    Untracked:  Johnson_DOX_24_RUV_Limma.html
+    Untracked:  VennDiagram.2024-07-23_18-08-30.log
+    Untracked:  VennDiagram.2024-07-23_18-08-31.log
 
 </code></pre>
 <p>
@@ -601,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/Omar-Johnson/DOX_24_Github/blob/85b47371762ed9419ea083861c6cc111fe82a87a/analysis/Johnson_DOX_24_RUV_Limma.Rmd" target="_blank">85b4737</a>
+</td>
+<td>
+Omar-Johnson
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+more updates for paper
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/Omar-Johnson/DOX_24_Github/f37e34eb196acf454fc6f04cde98103271357642/docs/Johnson_DOX_24_RUV_Limma.html" target="_blank">f37e34e</a>
+</td>
+<td>
+Omar-Johnson
+</td>
+<td>
+2024-07-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -1445,9 +1491,9 @@ S6       S6 A_48 Tech Control A_48_Control
 S8       S8 A_48 Tech Control A_48_Control
 S10     S10 A_48 Tech Control A_48_Control</code></pre>
 </div>
-<div id="viewing-how-na-threshold-vs-remaining-proteins"
+<div id="figs2a-viewing-how-na-threshold-vs-remaining-proteins"
 class="section level1">
-<h1>Viewing how NA threshold vs remaining proteins</h1>
+<h1>FigS2A Viewing how NA threshold vs remaining proteins</h1>
 <pre class="r"><code># View how NA thresholds affect the amount of proteins remaining to model
 # All proteins 
 Protein_DF_Abundance %&gt;% nrow()</code></pre>
@@ -3439,9 +3485,9 @@ Omar-Johnson
 </div>
 </div>
 </div>
-<div id="view-distribution-of-imputed-na-values-for-all-samples"
+<div id="figs2-b-view-distribution-of-imputed-na-values-for-all-samples"
 class="section level1">
-<h1>View distribution of imputed NA values for all samples</h1>
+<h1>FigS2 B View distribution of imputed NA values for all samples</h1>
 <pre class="r"><code>na_positions &lt;- is.na(Protein_DF_Abundance_imp)
 
 imputed_dataframe &lt;- normalizedData
@@ -5397,8 +5443,8 @@ Omar-Johnson
 </div>
 </div>
 </div>
-<div id="ruv-iii" class="section level1">
-<h1>RUV III</h1>
+<div id="figs2-cd-ruv-iii" class="section level1">
+<h1>FigS2 C&amp;D RUV III</h1>
 <pre class="r"><code># Convert to DGEList object 
 dge &lt;- DGEList(counts = as.matrix(Protein_DF_Abundance_imp_2))
 
